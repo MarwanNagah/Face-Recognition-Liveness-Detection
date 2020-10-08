@@ -1,2 +1,2 @@
-# Face-Recognition-Spoofing-Detection
+# Face-Recognition-Liveness-Detection
 Face recognition goal is to secure and organize access to computer based systems and locations. Spoofing is one of the methods that have been done to override face recognition technology which is defined as using a printed photo, a video or a 3d mask of a person to get an illegal access to the system.      The proposed project will be used to detect different spoofing methods using different machine learning techniques.
