@@ -18,14 +18,16 @@ class _State extends State<HomePage> {
             Container(
                 padding: EdgeInsets.fromLTRB(10, 30, 10, 80),
                 alignment: Alignment.bottomCenter,
-                child: ButtonTheme(
-                  minWidth: 200.0,
-                  height: 45.0,
-                  child: RaisedButton(
-                    color: Colors.greenAccent[400],
-                    onPressed: () {},
-                    child: Text("Start"),
+                child: MaterialButton(
+                  onPressed: () {},
+                  color: Colors.greenAccent[400],
+                  textColor: Colors.white,
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 40,
                   ),
+                  padding: EdgeInsets.all(30),
+                  shape: CircleBorder(),
                 )),
             Image(
               image: AssetImage("assets/12.gif"),
