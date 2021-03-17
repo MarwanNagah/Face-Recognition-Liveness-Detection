@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "553914189579",
+    "project_id": "face-liveness-detection-bca56",
+    "storage_bucket": "face-liveness-detection-bca56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553914189579:android:8d5ebc5caff489201d840e",
+        "android_client_info": {
+          "package_name": "com.example.face_liveness_detection_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553914189579-gonkd8dd8c1t8q384bel7cqqkskmtn5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDOPbanaHZO2XCNvMzavpaVkgnZ9dPbQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553914189579-gonkd8dd8c1t8q384bel7cqqkskmtn5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
