@@ -44,7 +44,7 @@ class _FaceDetectState extends State<FaceDetect> {
   }
 
   getImage() async {
-    var tempStore = await ImagePicker().getImage(source: ImageSource.camera);
+    var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
 
