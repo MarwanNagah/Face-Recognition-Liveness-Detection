@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
+import 'package:path/path.dart' as Path;
 //import 'faceDetection.dart';
 
 void main() => runApp(MyApp());
@@ -31,7 +33,22 @@ class _FaceDetectState extends State<FaceDetect> {
   bool isImageLoaded = false;
   bool isFaceDetected = false;
   List<Rect> rect = [];
-  String url='http://10.0.2.2:5000/';
+  String url = 'http://10.0.2.2:5000/';
+  String imageURL;
+
+  Future uploadFile() async {
+    FirebaseStorage storageReference = FirebaseStorage.instance;
+    Reference ref = storageReference
+        .ref()
+        .child('/Face_Images/${Path.basename(pickedImage.path)}}');
+    UploadTask uploadTask = ref.putFile(pickedImage);
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((value) {
+        imageURL = value;
+      });
+      print('File Uploaded');
+    });
+  }
 
   Future getResult() async {
     var data = await getData(url);
@@ -39,7 +56,7 @@ class _FaceDetectState extends State<FaceDetect> {
     print(decodedData['query']);
   }
 
-  _FaceDetectState(){
+  _FaceDetectState() {
     getResult();
   }
 
