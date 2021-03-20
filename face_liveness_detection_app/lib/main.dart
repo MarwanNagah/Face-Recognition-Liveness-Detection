@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:face_liveness_detection_app/result.dart';
 //import 'faceDetection.dart';
 
 void main() => runApp(MyApp());
@@ -29,9 +31,20 @@ class _FaceDetectState extends State<FaceDetect> {
   bool isImageLoaded = false;
   bool isFaceDetected = false;
   List<Rect> rect = [];
+  String url='http://10.0.2.2:5000/';
+
+  Future getResult() async {
+    var data = await getData(url);
+    var decodedData = jsonDecode(data);
+    print(decodedData['query']);
+  }
+
+  _FaceDetectState(){
+    getResult();
+  }
 
   getImage() async {
-    var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
+    var tempStore = await ImagePicker().getImage(source: ImageSource.camera);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
 
@@ -58,7 +71,7 @@ class _FaceDetectState extends State<FaceDetect> {
     }
 
     setState(() {
-      isFaceDetected=true;
+      isFaceDetected = true;
     });
   }
 
@@ -72,7 +85,10 @@ class _FaceDetectState extends State<FaceDetect> {
         actions: [
           FloatingActionButton(
             onPressed: getImage,
-            child: Icon(Icons.add_a_photo,color: Colors.black,),
+            child: Icon(
+              Icons.add_a_photo,
+              color: Colors.black,
+            ),
           )
         ],
       ),
