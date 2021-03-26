@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
@@ -32,20 +34,28 @@ class _FaceDetectState extends State<FaceDetect> {
   var imageFile;
   bool isImageLoaded = false;
   bool isFaceDetected = false;
+  bool isResultHere = false;
   List<Rect> rect = [];
-  String url = 'http://10.0.2.2:5000/';
+  String url = 'http://10.0.2.2:5000/api?';
   String imageURL;
+  String imagePath;
+  String tokenValue;
+  String finalResult = "Loading...";
 
   Future uploadFile() async {
+    await Firebase.initializeApp();
     FirebaseStorage storageReference = FirebaseStorage.instance;
     Reference ref = storageReference
         .ref()
         .child('/Face_Images/${Path.basename(pickedImage.path)}}');
     UploadTask uploadTask = ref.putFile(pickedImage);
-    uploadTask.then((res) {
-      res.ref.getDownloadURL().then((value) {
-        imageURL = value;
-      });
+    await uploadTask.then((res) async {
+      imageURL = await res.ref.getDownloadURL();
+      Uri uri = Uri.parse(imageURL);
+      tokenValue = uri.queryParameters['token'];
+      imagePath =
+          uri.pathSegments[4].substring(12, uri.pathSegments[4].length - 1);
+      url += 'path=' + imagePath + '&token=' + tokenValue;
       print('File Uploaded');
     });
   }
@@ -53,11 +63,17 @@ class _FaceDetectState extends State<FaceDetect> {
   Future getResult() async {
     var data = await getData(url);
     var decodedData = jsonDecode(data);
-    print(decodedData['query']);
-  }
 
-  _FaceDetectState() {
-    getResult();
+    if (decodedData['result'] == "0") {
+      finalResult = "Live";
+    } else {
+      finalResult = "Spoof";
+    }
+
+    setState(() {
+      isResultHere = true;
+    });
+    print(decodedData['result']);
   }
 
   getImage() async {
@@ -90,6 +106,8 @@ class _FaceDetectState extends State<FaceDetect> {
     setState(() {
       isFaceDetected = true;
     });
+    await uploadFile();
+    getResult();
   }
 
   @override
@@ -109,9 +127,9 @@ class _FaceDetectState extends State<FaceDetect> {
           )
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
-          SizedBox(height: 100),
+          SizedBox(height: 50),
           isImageLoaded && !isFaceDetected
               ? Center(
                   child: Container(
@@ -122,20 +140,23 @@ class _FaceDetectState extends State<FaceDetect> {
                             image: FileImage(pickedImage), fit: BoxFit.cover)),
                   ),
                 )
-              : isImageLoaded && isFaceDetected
+              : isImageLoaded && isFaceDetected && isResultHere
                   ? Center(
-                      child: Container(
-                      child: FittedBox(
-                        child: SizedBox(
-                          width: imageFile.width.toDouble(),
-                          height: imageFile.height.toDouble(),
-                          child: CustomPaint(
-                            painter:
-                                FacePainter(rect: rect, imageFile: imageFile),
+                      child: Column(children: [
+                      Container(
+                        child: FittedBox(
+                          child: SizedBox(
+                            width: imageFile.width.toDouble(),
+                            height: imageFile.height.toDouble(),
+                            child: CustomPaint(
+                              painter:
+                                  FacePainter(rect: rect, imageFile: imageFile),
+                            ),
                           ),
                         ),
                       ),
-                    ))
+                      Container(child: Text(finalResult)),
+                    ]))
                   : Container()
         ],
       ),

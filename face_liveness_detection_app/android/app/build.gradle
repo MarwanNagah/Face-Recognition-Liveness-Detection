@@ -58,5 +58,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-vision:20.1.1'
     implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+    implementation 'com.google.android.gms:play-services-vision-face-contour-internal:16.0.2'
 }
 apply plugin: 'com.google.gms.google-services'
