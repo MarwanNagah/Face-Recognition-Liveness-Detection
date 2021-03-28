@@ -77,6 +77,12 @@ class _FaceDetectState extends State<FaceDetect> {
   }
 
   getImage() async {
+    setState(() {
+      isImageLoaded = false;
+      isFaceDetected = false;
+      isResultHere = false;
+      url = 'http://10.0.2.2:5000/api?';
+    });
     var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
@@ -107,7 +113,34 @@ class _FaceDetectState extends State<FaceDetect> {
       isFaceDetected = true;
     });
     await uploadFile();
-    getResult();
+    await getResult();
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Result"),
+      content: Text(finalResult),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -155,14 +188,13 @@ class _FaceDetectState extends State<FaceDetect> {
                           ),
                         ),
                       ),
-                      Container(child: Text(finalResult)),
                     ]))
                   : Container()
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          detectFaces();
+          detectFaces().then((value) => showAlertDialog(context));
         },
         child: Icon(Icons.check),
       ),
