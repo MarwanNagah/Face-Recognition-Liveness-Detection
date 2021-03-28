@@ -43,8 +43,7 @@ class _State extends State<AdduserPage> {
                     child: RichText(
                       text: TextSpan(
                         text: "Add ",
-                        style:
-                            TextStyle(color: Color(0xff30384c), fontSize: 40),
+                        style: TextStyle(color: Colors.black, fontSize: 40),
                         children: <TextSpan>[
                           TextSpan(
                               text: 'User',

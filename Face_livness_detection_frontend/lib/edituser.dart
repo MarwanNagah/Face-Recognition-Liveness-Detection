@@ -23,7 +23,7 @@ class _State extends State<EdituserPage> {
           actions: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.save_outlined,
+                Icons.save,
                 color: Colors.white,
               ),
               onPressed: () {
@@ -39,12 +39,11 @@ class _State extends State<EdituserPage> {
               children: <Widget>[
                 Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: 50.0),
+                    padding: const EdgeInsets.only(top: 51.0),
                     child: RichText(
                       text: TextSpan(
                         text: "Edit ",
-                        style:
-                            TextStyle(color: Color(0xff30384c), fontSize: 40),
+                        style: TextStyle(color: Colors.black, fontSize: 40),
                         children: <TextSpan>[
                           TextSpan(
                               text: 'User',
