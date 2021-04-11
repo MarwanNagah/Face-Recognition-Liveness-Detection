@@ -10,16 +10,27 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
+import 'package:provider/provider.dart';
+import 'package:face_liveness_detection_app/Screens/wrapper.dart';
+
+import 'Models/user.dart';
+import 'Providers/auth.dart';
 //import 'faceDetection.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FaceDetect(),
-      theme: ThemeData.dark(),
+    return StreamProvider<User>.value(
+      value: AuthService().user,
+      child: MaterialApp(
+        home: Wrapper(),
+      ),
     );
   }
 }
