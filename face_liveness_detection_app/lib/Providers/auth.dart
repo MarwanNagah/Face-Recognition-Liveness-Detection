@@ -8,7 +8,6 @@ class AuthService {
   // create user object based on firebaseUser
   AppUser.User _userFromFirebaseUser(User user) {
     if (user != null) {
-      print("testetsetset");
       AppUser.User loggedUser = AppUser.User(uid: user.uid, fUser: user);
       return loggedUser;
     } else {
@@ -59,7 +58,7 @@ class AuthService {
           email: email, password: password);
       User user = result.user;
 
-      /*AppUser.User signedinUser = AppUser.User(
+      AppUser.User signedinUser = AppUser.User(
         fUser: user,
         eMail: user.email,
         uid: user.uid,
@@ -67,7 +66,9 @@ class AuthService {
         lastName: lastName,
         userType: userType,
       );
-      signedinUser.register();*/
+      signedinUser.addType(0, 'Client');
+      signedinUser.addType(1, 'Manager');
+      signedinUser.addType(2, 'Admin');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

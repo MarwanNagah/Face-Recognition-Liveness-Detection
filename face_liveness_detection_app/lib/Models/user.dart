@@ -38,7 +38,8 @@ class User {
   }
 
   register() async {
-    final url = 'https://carqr-e4c82-default-rtdb.firebaseio.com/users.json';
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users.json';
     Uri uri = Uri.parse(url);
     return http
         .post(uri,
@@ -48,6 +49,22 @@ class User {
               'lastName': this.lastName,
               'eMail': this.eMail,
               'usertype': this.userType,
+            }))
+        .catchError((error) {
+      print(error);
+    });
+  }
+
+  addType(var id, var name) async {
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/userType.json';
+    Uri uri = Uri.parse(url);
+    return http
+        .post(uri,
+            body: json.encode({
+              'userTypeID': id,
+              'userTypeName': name,
+              'isDeleted': 0,
             }))
         .catchError((error) {
       print(error);
