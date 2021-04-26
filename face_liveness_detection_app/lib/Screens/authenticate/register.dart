@@ -347,9 +347,9 @@ class _RegisterState extends State<Register> {
                 onTap: () async {
                   if (_formKey.currentState.validate()) {
                     setState(() => loading = true);
-                    String newUserType = '1';
+                    int newUserType = 1;
                     if (userType == UserTypes.Business) {
-                      newUserType = '2';
+                      newUserType = 2;
                     }
                     dynamic result = await _auth.registerWithEmailAndPassword(
                       email: email,

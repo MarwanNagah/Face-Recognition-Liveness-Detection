@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<User>.value(
+      initialData: null,
       value: AuthService().user,
       child: MaterialApp(
         home: Wrapper(),
@@ -35,9 +37,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FaceDetect extends StatefulWidget {
+class Nav extends StatelessWidget {
+  final User loggedUser;
+
+  Nav({@required this.loggedUser});
   @override
-  _FaceDetectState createState() => _FaceDetectState();
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserTypes>(
+          create: (context) => UserTypes(),
+        )
+      ],
+      child: MaterialApp(
+        routes: {
+          '/': (ctx) => FaceDetect(
+                loggedUser: loggedUser,
+              ),
+        },
+      ),
+    );
+  }
+}
+
+class FaceDetect extends StatefulWidget {
+  final User loggedUser;
+
+  FaceDetect({@required this.loggedUser});
+
+  @override
+  _FaceDetectState createState() => _FaceDetectState(loggedUser: loggedUser);
 }
 
 class _FaceDetectState extends State<FaceDetect> {
@@ -52,6 +81,24 @@ class _FaceDetectState extends State<FaceDetect> {
   String imagePath;
   String tokenValue;
   String finalResult = "Loading...";
+  final AuthService _auth = AuthService();
+
+  final User loggedUser;
+
+  _FaceDetectState({@required this.loggedUser});
+
+  void initState() {
+    super.initState();
+    Provider.of<UserTypes>(context, listen: false).readTypes().then((_) {
+      print(Provider.of<UserTypes>(context, listen: false)
+          .allTypes[0]
+          .userTypeName);
+    });
+
+    loggedUser.readUser().then((_) {
+      print(loggedUser.firstName);
+    });
+  }
 
   Future uploadFile() async {
     await Firebase.initializeApp();
@@ -205,7 +252,8 @@ class _FaceDetectState extends State<FaceDetect> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          detectFaces().then((value) => showAlertDialog(context));
+          //detectFaces().then((value) => showAlertDialog(context));
+          _auth.signOut();
         },
         child: Icon(Icons.check),
       ),

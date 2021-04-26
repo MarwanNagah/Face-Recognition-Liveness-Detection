@@ -1,8 +1,11 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:face_liveness_detection_app/Models/userType.dart';
+import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class User {
   final String uid;
@@ -12,7 +15,7 @@ class User {
   String firstName;
   String lastName;
   String eMail;
-  String userType;
+  UserType userType;
 
   User({
     @required this.uid,
@@ -48,23 +51,7 @@ class User {
               'firstname': this.firstName,
               'lastName': this.lastName,
               'eMail': this.eMail,
-              'usertype': this.userType,
-            }))
-        .catchError((error) {
-      print(error);
-    });
-  }
-
-  addType(var id, var name) async {
-    final url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/userType.json';
-    Uri uri = Uri.parse(url);
-    return http
-        .post(uri,
-            body: json.encode({
-              'userTypeID': id,
-              'userTypeName': name,
-              'isDeleted': 0,
+              'usertype': this.userType.userTypeID,
             }))
         .catchError((error) {
       print(error);
@@ -72,25 +59,36 @@ class User {
   }
 
   Future<void> readUser() async {
-    final url = 'https://carqr-e4c82-default-rtdb.firebaseio.com/users.json';
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users.json';
     try {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
 
       final dbData = json.decode(response.body) as Map<String, dynamic>;
-      dbData.forEach((key, value) {
+      dbData.forEach((key, value) async {
+        print('test $key');
+        print(value['uid']);
+        print(this.uid);
         if (value['uid'] == this.uid) {
+          print('test 1');
           this.fireID = key;
           this.eMail = value['eMail'];
           this.firstName = value['firstname'];
           this.lastName = value['lastName'];
-          this.userType = value['usertype'];
-          print("This is ${this.eMail}");
+          this.userType = await readType(value['usertype']);
+          print(this.userType.userTypeName);
           return this;
         }
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<UserType> readType(int id) async {
+    final UserTypes temp = UserTypes();
+    UserType type = await temp.findById(id);
+    return type;
   }
 }

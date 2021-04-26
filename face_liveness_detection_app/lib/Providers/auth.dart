@@ -1,3 +1,4 @@
+import 'package:face_liveness_detection_app/Models/userType.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:face_liveness_detection_app/Models/user.dart' as AppUser;
 import 'package:firebase_core/firebase_core.dart';
@@ -51,8 +52,9 @@ class AuthService {
     String password,
     String firstName,
     String lastName,
-    String userType,
+    int userType,
   }) async {
+    UserType newType = UserType(userTypeID: userType, userTypeName: 'Manager');
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -64,11 +66,9 @@ class AuthService {
         uid: user.uid,
         firstName: firstName,
         lastName: lastName,
-        userType: userType,
+        userType: newType,
       );
-      signedinUser.addType(0, 'Client');
-      signedinUser.addType(1, 'Manager');
-      signedinUser.addType(2, 'Admin');
+      signedinUser.register();
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
