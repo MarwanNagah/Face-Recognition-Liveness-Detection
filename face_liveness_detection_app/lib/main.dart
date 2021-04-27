@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:face_liveness_detection_app/Screens/admin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,9 @@ import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
 import 'package:provider/provider.dart';
 import 'package:face_liveness_detection_app/Screens/wrapper.dart';
-
 import 'Models/user.dart';
 import 'Providers/auth.dart';
+import 'Providers/institutionProvider.dart';
 //import 'faceDetection.dart';
 
 Future<void> main() async {
@@ -30,6 +31,26 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       child: MaterialApp(
         home: Wrapper(),
+      ),
+    );
+  }
+}
+
+class Nav extends StatelessWidget {
+  final User user;
+  Nav({@required this.user});
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<InstitutionProvider>(
+          create: (_) => InstitutionProvider(user: user),
+        ),
+      ],
+      child: MaterialApp(
+        routes: {
+          '/': (ctx) => Adminpage(),
+        },
       ),
     );
   }
