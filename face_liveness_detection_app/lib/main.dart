@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'package:face_liveness_detection_app/Screens/admin.dart';
 import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:face_liveness_detection_app/Screens/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,9 +15,9 @@ import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
 import 'package:provider/provider.dart';
 import 'package:face_liveness_detection_app/Screens/wrapper.dart';
-
 import 'Models/user.dart';
 import 'Providers/auth.dart';
+import 'Providers/institutionProvider.dart';
 //import 'faceDetection.dart';
 
 Future<void> main() async {
@@ -46,6 +47,9 @@ class Nav extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<InstitutionProvider>(
+          create: (_) => InstitutionProvider(user: loggedUser),
+        ),
         ChangeNotifierProvider<UserTypes>(
           create: (context) => UserTypes(),
         )
@@ -56,6 +60,12 @@ class Nav extends StatelessWidget {
                 loggedUser: loggedUser,
               ),
         },
+        // child: MaterialApp(
+        //   routes: {
+        //     '/': (ctx) => FaceDetect(
+        //           loggedUser: loggedUser,
+        //         ),
+        //   },
       ),
     );
   }
