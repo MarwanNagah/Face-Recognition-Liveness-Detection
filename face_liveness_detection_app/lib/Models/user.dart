@@ -67,17 +67,12 @@ class User {
 
       final dbData = json.decode(response.body) as Map<String, dynamic>;
       dbData.forEach((key, value) async {
-        print('test $key');
-        print(value['uid']);
-        print(this.uid);
         if (value['uid'] == this.uid) {
-          print('test 1');
+          readType(value['usertype']);
           this.fireID = key;
           this.eMail = value['eMail'];
           this.firstName = value['firstname'];
           this.lastName = value['lastName'];
-          this.userType = await readType(value['usertype']);
-          print(this.userType.userTypeName);
           return this;
         }
       });
@@ -89,6 +84,7 @@ class User {
   Future<UserType> readType(int id) async {
     final UserTypes temp = UserTypes();
     UserType type = await temp.findById(id);
+    this.userType = type;
     return type;
   }
 }

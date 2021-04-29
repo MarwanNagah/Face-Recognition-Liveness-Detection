@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:face_liveness_detection_app/Providers/user_types.dart';
+import 'package:face_liveness_detection_app/Screens/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +52,58 @@ class Nav extends StatelessWidget {
       ],
       child: MaterialApp(
         routes: {
-          '/': (ctx) => FaceDetect(
+          '/': (ctx) => PageNavigator(
                 loggedUser: loggedUser,
               ),
         },
       ),
     );
+  }
+}
+
+class PageNavigator extends StatefulWidget {
+  final User loggedUser;
+
+  PageNavigator({@required this.loggedUser});
+  @override
+  _PageNavigatorState createState() =>
+      _PageNavigatorState(loggedUser: loggedUser);
+}
+
+class _PageNavigatorState extends State<PageNavigator> {
+  final User loggedUser;
+  bool _isLoaded = false;
+  dynamic initialPage;
+
+  _PageNavigatorState({@required this.loggedUser});
+
+  void initState() {
+    super.initState();
+    asyncMethod();
+  }
+
+  void asyncMethod() async {
+    await loggedUser.readUser();
+    Future.delayed(const Duration(seconds: 1), () {
+      if (loggedUser.userType.userTypeName == "Client") {
+        //page for client
+        initialPage = FaceDetect(loggedUser: loggedUser);
+      } else if (loggedUser.userType.userTypeName == "Manager") {
+        //page for manager
+        initialPage = Loading();
+      } else {
+        //page for admin
+        initialPage = Loading();
+      }
+      setState(() {
+        _isLoaded = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !_isLoaded ? Loading() : initialPage;
   }
 }
 
@@ -86,19 +133,6 @@ class _FaceDetectState extends State<FaceDetect> {
   final User loggedUser;
 
   _FaceDetectState({@required this.loggedUser});
-
-  void initState() {
-    super.initState();
-    Provider.of<UserTypes>(context, listen: false).readTypes().then((_) {
-      print(Provider.of<UserTypes>(context, listen: false)
-          .allTypes[0]
-          .userTypeName);
-    });
-
-    loggedUser.readUser().then((_) {
-      print(loggedUser.firstName);
-    });
-  }
 
   Future uploadFile() async {
     await Firebase.initializeApp();

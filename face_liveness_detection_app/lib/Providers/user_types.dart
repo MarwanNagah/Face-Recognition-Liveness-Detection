@@ -38,7 +38,5 @@ class UserTypes with ChangeNotifier {
       print(e.toString());
       throw (e);
     }
-
-    print(_types.length);
   }
 }
