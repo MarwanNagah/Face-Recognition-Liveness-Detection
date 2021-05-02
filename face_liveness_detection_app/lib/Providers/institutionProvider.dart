@@ -11,6 +11,10 @@ class InstitutionProvider with ChangeNotifier {
   Institution _institution;
   List<Institution> _institutions = [];
 
+  Institution findById(String id) {
+    return _institution;
+  }
+
   InstitutionProvider({@required this.user});
 
   Future<Institution> fetchInstitution() async {
@@ -55,7 +59,7 @@ class InstitutionProvider with ChangeNotifier {
       final response = await http.post(uri,
           body: json.encode({
             'institutionName': institution.institutionName,
-            'emplyeesNo': institution.employeesNumber,
+            //'emplyeesNo': institution.employeesNumber,
             'appUsage': institution.appusage,
             'isActive': institution.isActive,
             'adminId': user.uid,
@@ -63,12 +67,13 @@ class InstitutionProvider with ChangeNotifier {
 
       final newInstitution = Institution(
           institutionName: institution.institutionName,
-          employeesNumber: institution.employeesNumber,
+          //employeesNumber: institution.employeesNumber,
           appusage: institution.appusage,
           isActive: institution.isActive,
           id: json.decode(response.body)['name']);
       _institution = newInstitution;
       _institutions.add(newInstitution);
+      print("ADD INs");
       notifyListeners();
     } catch (error) {
       print(error);

@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Adminpage extends StatefulWidget {
+class AdminHomePage extends StatefulWidget {
   @override
-  _AdminpageState createState() => _AdminpageState();
+  _AdminHomePageState createState() => _AdminHomePageState();
 }
 
-class _AdminpageState extends State<Adminpage> {
+class _AdminHomePageState extends State<AdminHomePage> {
   CalendarController _controller;
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -20,21 +19,6 @@ class _AdminpageState extends State<Adminpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(' Admin Page'),
-        backgroundColor: Color(0xff30384c),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
-      ),
       body: Padding(
         padding: EdgeInsets.all(0),
         child: ListView(
@@ -48,7 +32,6 @@ class _AdminpageState extends State<Adminpage> {
                 calendarController: _controller,
               ),
             ),
-
             Container(
               padding: EdgeInsets.only(left: 30),
               width: MediaQuery.of(context).size.width,
@@ -128,60 +111,8 @@ class _AdminpageState extends State<Adminpage> {
                 ],
               ),
             )
-
-            // Container(
-            //     height: 90,
-            //     padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-            //     child: RaisedButton(
-            //       textColor: Colors.white,
-            //       color: Colors.greenAccent[400],
-            //       child: Text('Add User'),
-            //       onPressed: () {},
-            //     )),
-            // Container(
-            //     height: 90,
-            //     padding: EdgeInsets.fromLTRB(30, 50, 30, 0),
-            //     child: RaisedButton(
-            //       textColor: Colors.white,
-            //       color: Colors.greenAccent[400],
-            //       child: Text('Edit'),
-            //       onPressed: () {},
-            //     )),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Color(0xff30384c),
-        fixedColor: Colors.white,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_active),
-            title: Text("Notification"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_city),
-            title: Text("Institution"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.recent_actors_sharp),
-            title: Text("Report"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            title: Text("Add User"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit),
-            title: Text("Edit users"),
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
       ),
     );
   }

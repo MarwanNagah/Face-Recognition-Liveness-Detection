@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:async';
-import 'package:face_liveness_detection_app/Screens/admin.dart';
+import 'package:face_liveness_detection_app/Screens/Admin/admin.dart';
 import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +17,7 @@ import 'package:face_liveness_detection_app/Screens/wrapper.dart';
 import 'Models/user.dart';
 import 'Providers/auth.dart';
 import 'Providers/institutionProvider.dart';
+import 'Screens/Admin/manage_institution.dart';
 //import 'faceDetection.dart';
 
 Future<void> main() async {
@@ -55,7 +56,8 @@ class Nav extends StatelessWidget {
       ],
       child: MaterialApp(
         routes: {
-          '/': (ctx) => Adminpage(),
+          '/': (ctx) => Adminpage(user: loggedUser),
+          ManageInstitution.routeName: (ctx) => ManageInstitution(),
         },
         // child: MaterialApp(
         //   routes: {
