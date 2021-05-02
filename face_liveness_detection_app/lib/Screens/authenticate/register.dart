@@ -39,7 +39,7 @@ class _RegisterState extends State<Register> {
                   },
                 ),
                 iconTheme: IconThemeData(color: Colors.white),
-                backgroundColor: Colors.blue[800],
+                backgroundColor: Colors.black,
                 centerTitle: true,
                 elevation: 0,
                 title: Text(
@@ -58,7 +58,7 @@ class _RegisterState extends State<Register> {
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.7,
                     width: MediaQuery.of(context).size.width,
-                    color: Colors.blue[800],
+                    color: Colors.black,
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -69,15 +69,23 @@ class _RegisterState extends State<Register> {
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 3),
-                              child: FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Text('Scan Car \nQR',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold)),
-                              ),
+                              child: Container(
+                                  alignment: Alignment.topCenter,
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: "Face",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 55),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                            text: ' App',
+                                            style: TextStyle(
+                                                color:
+                                                    Colors.greenAccent[400])),
+                                      ],
+                                    ),
+                                  )),
                             ),
                           ],
                         ),
@@ -316,6 +324,7 @@ class _RegisterState extends State<Register> {
                           ListTile(
                             title: const Text('Personal'),
                             leading: Radio(
+                              activeColor: Colors.greenAccent[400],
                               value: UserTypes.Personal,
                               groupValue: userType,
                               onChanged: (UserTypes value) {
@@ -328,6 +337,7 @@ class _RegisterState extends State<Register> {
                           ListTile(
                             title: const Text('Business'),
                             leading: Radio(
+                              activeColor: Colors.greenAccent[400],
                               value: UserTypes.Business,
                               groupValue: userType,
                               onChanged: (UserTypes value) {
@@ -376,7 +386,7 @@ class _RegisterState extends State<Register> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
-                            color: Colors.blue[800],
+                            color: Colors.greenAccent[400],
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -385,7 +395,7 @@ class _RegisterState extends State<Register> {
                                 'Sign Up',
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               )),
                             )))),

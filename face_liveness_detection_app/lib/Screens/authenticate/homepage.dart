@@ -9,28 +9,42 @@ class Homepage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            color: Colors.blue[800],
+            color: Colors.black,
             child: Align(
               alignment: Alignment.topCenter,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: MediaQuery.of(context).size.height * 0.60,
                 width: MediaQuery.of(context).size.width * 0.60,
                 child: Center(
                   child: Image.asset(
-                    'assets/images/car_logo.png',
-                    fit: BoxFit.contain,
+                    'assets/images/12.gif',
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
             ),
           ),
+          Container(
+              alignment: Alignment.topCenter,
+              padding: const EdgeInsets.only(top: 90.0),
+              child: RichText(
+                text: TextSpan(
+                  text: "Face",
+                  style: TextStyle(color: Colors.white, fontSize: 52),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: ' App',
+                        style: TextStyle(color: Colors.greenAccent[400])),
+                  ],
+                ),
+              )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height * 0.55,
               width: MediaQuery.of(context).size.width,
               decoration: new BoxDecoration(
-                  color: Color(0xFFF3F3F5),
+                  color: Colors.white,
                   borderRadius: new BorderRadius.only(
                     topLeft: const Radius.circular(50.0),
                     topRight: const Radius.circular(50.0),
@@ -43,20 +57,18 @@ class Homepage extends StatelessWidget {
                   SizedBox(),
                   Column(children: [
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text('Login',
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 90),
+                      child: Text('Welcome',
                           style: TextStyle(
-                              color: Color(0xFF0F2E48),
-                              fontSize: 16,
+                              color: Colors.greenAccent[400],
+                              fontSize: 35,
                               fontWeight: FontWeight.bold)),
                     ),
                     GestureDetector(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.10,
-                          width: MediaQuery.of(context).size.width,
-                      
-                          child:
-                              Image.asset('assets/images/user_password.png')),
+                      child: Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 3,
+                          child: Image.asset('assets/images/15.gif')),
                       onTap: () {
                         // Navigator.of(context)
                         //     .push(MaterialPageRoute(
