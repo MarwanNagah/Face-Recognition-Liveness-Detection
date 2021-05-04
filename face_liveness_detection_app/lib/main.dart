@@ -57,8 +57,6 @@ class Nav extends StatelessWidget {
       ],
       child: MaterialApp(
         routes: {
-          // '/': (ctx) => Adminpage(user: loggedUser),
-
           '/': (ctx) => PageNavigator(
                 loggedUser: loggedUser,
               ),
@@ -82,12 +80,14 @@ class _PageNavigatorState extends State<PageNavigator> {
   final User loggedUser;
   bool _isLoaded = false;
   dynamic initialPage;
+  final AuthService _auth = AuthService();
 
   _PageNavigatorState({@required this.loggedUser});
 
   void initState() {
     super.initState();
     asyncMethod();
+    // _auth.signOut();
   }
 
   void asyncMethod() async {
@@ -98,7 +98,7 @@ class _PageNavigatorState extends State<PageNavigator> {
         initialPage = FaceDetect(loggedUser: loggedUser);
       } else if (loggedUser.userType.userTypeName == "Manager") {
         //page for manager
-        initialPage = Loading();
+        initialPage = Adminpage(user: loggedUser);
       } else {
         //page for admin
         initialPage = Loading();

@@ -3,7 +3,6 @@ import 'package:face_liveness_detection_app/Models/user.dart';
 class Institution {
   String id;
   String institutionName;
-  int employeesNumber;
   String appusage;
   bool isActive;
 
@@ -12,18 +11,20 @@ class Institution {
   Institution(
       {this.id,
       this.institutionName,
-      this.employeesNumber,
       this.appusage,
       this.isActive,
       this.employees}) {
     this.employees = [];
   }
 
+  int getEmployeesNo() {
+    return employees.length;
+  }
+
   Map<String, dynamic> get map {
     return {
       "institutionid": id,
       "institutionName": institutionName,
-      "emplyeesNo": employeesNumber,
       "appUsage": appusage,
       "isActive": isActive,
       "employees": employees,

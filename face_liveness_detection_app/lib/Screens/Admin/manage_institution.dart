@@ -9,28 +9,84 @@ class ManageInstitution extends StatefulWidget {
   _ManageInstitutionState createState() => _ManageInstitutionState();
 }
 
-enum institutuionTypes { Yes, No }
-
 class _ManageInstitutionState extends State<ManageInstitution> {
   final _formKey = GlobalKey<FormState>();
   var nameFocusNode = FocusNode();
-  var appFocusNode = FocusNode();
   var isloading = false;
   var isInit = true;
-  institutuionTypes insType = institutuionTypes.Yes;
+  int _radioValue = 0;
+  String _chosenValue;
   var editInstitution = Institution(
     id: null,
     institutionName: '',
     appusage: '',
-    //employeesNumber: 0,
     isActive: true,
   );
   var intialValues = {
     'institutionName': '',
     'appusage': '',
-    //'employeesNumber': 0,
     'isActive': true,
   };
+
+  void _handleRadioValueChange(int value) {
+    setState(() {
+      _radioValue = value;
+
+      switch (_radioValue) {
+        case 0:
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: editInstitution.appusage,
+              isActive: true,
+              id: editInstitution.id);
+          break;
+        case 1:
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: editInstitution.appusage,
+              isActive: false,
+              id: editInstitution.id);
+          break;
+      }
+    });
+  }
+
+  void _handledropValueChange(String value) {
+    setState(() {
+      _chosenValue = value;
+
+      switch (_chosenValue) {
+        case "Attendance System":
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: _chosenValue,
+              isActive: editInstitution.isActive,
+              id: editInstitution.id);
+          break;
+        case 'Payment Transaction':
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: _chosenValue,
+              isActive: editInstitution.isActive,
+              id: editInstitution.id);
+          break;
+        case 'Security Access':
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: _chosenValue,
+              isActive: editInstitution.isActive,
+              id: editInstitution.id);
+          break;
+        case 'Other':
+          editInstitution = Institution(
+              institutionName: editInstitution.institutionName,
+              appusage: _chosenValue,
+              isActive: editInstitution.isActive,
+              id: editInstitution.id);
+          break;
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -43,9 +99,23 @@ class _ManageInstitutionState extends State<ManageInstitution> {
         intialValues = {
           'institutionName': editInstitution.institutionName,
           'appusage': editInstitution.appusage,
-          'employeesNumber': editInstitution.employeesNumber,
           'isActive': editInstitution.isActive
         };
+        if (editInstitution.isActive == false) {
+          _radioValue = 1;
+        } else {
+          _radioValue = 0;
+        }
+
+        if (editInstitution.appusage == "Attendance System") {
+          _chosenValue = "Attendance System";
+        } else if (editInstitution.appusage == 'Payment Transaction') {
+          _chosenValue = 'Payment Transaction';
+        } else if (editInstitution.appusage == 'Security Access') {
+          _chosenValue = 'Security Access';
+        } else {
+          _chosenValue = "Other";
+        }
       }
     }
     isInit = false;
@@ -56,13 +126,11 @@ class _ManageInstitutionState extends State<ManageInstitution> {
   void initState() {
     super.initState();
     nameFocusNode = FocusNode();
-    appFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     nameFocusNode.dispose();
-    appFocusNode.dispose();
     super.dispose();
   }
 
@@ -125,12 +193,20 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                 child: ListView(
                   children: <Widget>[
                     check
-                        ? Text(
-                            'Edit your showroom',
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 30),
+                        ? RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: "Edit ",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 40),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: 'Institution',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.greenAccent[400])),
+                              ],
+                            ),
                           )
                         : RichText(
                             textAlign: TextAlign.center,
@@ -193,7 +269,7 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                                   : FontWeight.w300)),
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(appFocusNode);
+                        FocusScope.of(context).unfocus();
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -222,51 +298,96 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                     new Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                     ),
-                    TextFormField(
-                      initialValue: intialValues['appusage'],
-                      focusNode: appFocusNode,
-                      decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
+                    Container(
+                        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.greenAccent[400],
-                            ),
+                            color: Colors.white12,
+                            border:
+                                Border.all(width: 2, color: Color(0xff30384c))),
+                        child: DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          focusColor: Colors.red,
+                          elevation: 7,
+                          value: _chosenValue,
+                          dropdownColor: Colors.white,
+                          items: <String>[
+                            'Attendance System',
+                            'Payment Transaction',
+                            'Security Access',
+                            'Other',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                    color: Color(0xff30384c),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 20),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Please select an option",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: Color(0xff30384c),
-                            ),
-                          ),
-                          labelText: 'AppUsage',
-                          labelStyle: TextStyle(
-                              color: appFocusNode.hasFocus
-                                  ? Colors.greenAccent[400]
-                                  : Colors.black,
-                              fontWeight: appFocusNode.hasFocus
-                                  ? FontWeight.w500
-                                  : FontWeight.w300)),
-                      textInputAction: TextInputAction.next,
-                      //keyboardType: TextInputType.number,
-                      onFieldSubmitted: (_) {
-                        // FocusScope.of(context).requestFocus(locationFocusNode);
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter App Usage';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        editInstitution = Institution(
-                            institutionName: editInstitution.institutionName,
-                            appusage: value,
-                            isActive: editInstitution.isActive,
-                            id: editInstitution.id);
-                      },
-                    ),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select an option';
+                            }
+                            return null;
+                          },
+                          onChanged: _handledropValueChange,
+                        )),
+                    // TextFormField(
+                    //   initialValue: intialValues['appusage'],
+                    //   focusNode: appFocusNode,
+                    //   decoration: InputDecoration(
+                    //       focusedBorder: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(25),
+                    //         borderSide: BorderSide(
+                    //           width: 2,
+                    //           color: Colors.greenAccent[400],
+                    //         ),
+                    //       ),
+                    //       enabledBorder: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(25),
+                    //         borderSide: BorderSide(
+                    //           width: 2,
+                    //           color: Color(0xff30384c),
+                    //         ),
+                    //       ),
+                    //       labelText: 'AppUsage',
+                    //       labelStyle: TextStyle(
+                    //           color: appFocusNode.hasFocus
+                    //               ? Colors.greenAccent[400]
+                    //               : Colors.black,
+                    //           fontWeight: appFocusNode.hasFocus
+                    //               ? FontWeight.w500
+                    //               : FontWeight.w300)),
+                    //   textInputAction: TextInputAction.next,
+                    //   //keyboardType: TextInputType.number,
+                    //   onFieldSubmitted: (_) {
+                    //     // FocusScope.of(context).requestFocus(locationFocusNode);
+                    //   },
+                    //   validator: (value) {
+                    //     if (value.isEmpty) {
+                    //       return 'Please enter App Usage';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   onSaved: (value) {
+                    //     editInstitution = Institution(
+                    //         institutionName: editInstitution.institutionName,
+                    //         appusage: value,
+                    //         isActive: editInstitution.isActive,
+                    //         id: editInstitution.id);
+                    //   },
+                    // ),
                     new Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                     ),
@@ -286,38 +407,18 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                           title: const Text('Yes'),
                           leading: Radio(
                             activeColor: Colors.greenAccent[400],
-                            value: institutuionTypes.Yes,
-                            groupValue: insType,
-                            onChanged: (institutuionTypes value) {
-                              setState(() {
-                                insType = value;
-                              });
-                              editInstitution = Institution(
-                                  institutionName:
-                                      editInstitution.institutionName,
-                                  appusage: editInstitution.appusage,
-                                  isActive: true,
-                                  id: editInstitution.id);
-                            },
+                            value: 0,
+                            groupValue: _radioValue,
+                            onChanged: _handleRadioValueChange,
                           ),
                         ),
                         ListTile(
                           title: const Text('No'),
                           leading: Radio(
                             activeColor: Colors.greenAccent[400],
-                            value: institutuionTypes.No,
-                            groupValue: insType,
-                            onChanged: (institutuionTypes value) {
-                              setState(() {
-                                insType = value;
-                              });
-                              editInstitution = Institution(
-                                  institutionName:
-                                      editInstitution.institutionName,
-                                  appusage: editInstitution.appusage,
-                                  isActive: false,
-                                  id: editInstitution.id);
-                            },
+                            value: 1,
+                            groupValue: _radioValue,
+                            onChanged: _handleRadioValueChange,
                           ),
                         ),
                       ],
@@ -343,13 +444,25 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10),
                                       child: Center(
-                                          child: Text(
-                                        'ADD',
-                                        style: TextStyle(
-                                            color: Colors.greenAccent[400],
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
-                                      )),
+                                          child: check
+                                              ? Text(
+                                                  'EDIT',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .greenAccent[400],
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              : Text(
+                                                  'ADD',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .greenAccent[400],
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )),
                                     ))))),
                   ],
                 ),

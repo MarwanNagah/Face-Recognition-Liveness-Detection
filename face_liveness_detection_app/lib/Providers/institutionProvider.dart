@@ -1,5 +1,6 @@
 import 'package:face_liveness_detection_app/Models/HTTPException.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
+import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,11 +16,15 @@ class InstitutionProvider with ChangeNotifier {
     return _institution;
   }
 
+  Institution get institution {
+    return _institution;
+  }
+
   InstitutionProvider({@required this.user});
 
   Future<Institution> fetchInstitution() async {
     var url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json?auth=${user.token}';
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json';
     try {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
@@ -33,11 +38,11 @@ class InstitutionProvider with ChangeNotifier {
           dbInstitution = new Institution(
             id: key,
             institutionName: data['institutionName'],
-            employeesNumber: data['emplyeesNo'],
             appusage: data['appUsage'],
             isActive: data['isActive'],
           );
           _institution = dbInstitution;
+          AdminInstitutionSc.isloading = true;
           notifyListeners();
           return dbInstitution;
         }
@@ -52,14 +57,14 @@ class InstitutionProvider with ChangeNotifier {
 
   Future<void> addInstitution(Institution institution) async {
     final url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json?auth=${user.token}';
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json';
 
     try {
       Uri uri = Uri.parse(url);
+
       final response = await http.post(uri,
           body: json.encode({
             'institutionName': institution.institutionName,
-            //'emplyeesNo': institution.employeesNumber,
             'appUsage': institution.appusage,
             'isActive': institution.isActive,
             'adminId': user.uid,
@@ -67,13 +72,13 @@ class InstitutionProvider with ChangeNotifier {
 
       final newInstitution = Institution(
           institutionName: institution.institutionName,
-          //employeesNumber: institution.employeesNumber,
           appusage: institution.appusage,
           isActive: institution.isActive,
+          employees: institution.employees,
           id: json.decode(response.body)['name']);
       _institution = newInstitution;
+      AdminInstitutionSc.isloading = true;
       _institutions.add(newInstitution);
-      print("ADD INs");
       notifyListeners();
     } catch (error) {
       print(error);
@@ -83,13 +88,12 @@ class InstitutionProvider with ChangeNotifier {
 
   Future<void> updateInstitution(String id, Institution newInstitution) async {
     final url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id.json?auth=${user.token}';
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id.json';
     try {
       Uri uri = Uri.parse(url);
       await http.patch(uri,
           body: json.encode({
             'institutionName': newInstitution.institutionName,
-            'emplyeesNo': newInstitution.employeesNumber,
             'appUsage': newInstitution.appusage,
             'isActive': newInstitution.isActive,
           }));
@@ -103,14 +107,16 @@ class InstitutionProvider with ChangeNotifier {
 
   Future<void> deleteInstitution(String id) async {
     final url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id.json?auth=${user.token}';
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id.json';
     var exisitingInstitution = _institution;
     _institution = null;
+    AdminInstitutionSc.isloading = false;
     notifyListeners();
     Uri uri = Uri.parse(url);
     final response = await http.delete(uri);
     if (response.statusCode >= 400) {
       print("response Code : ${response.statusCode}");
+      AdminInstitutionSc.isloading = true;
       _institution = exisitingInstitution;
       notifyListeners();
       throw HTTPException('Delete failed for showroom whose id is $id');

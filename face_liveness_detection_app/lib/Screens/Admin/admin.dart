@@ -1,6 +1,8 @@
 import 'package:face_liveness_detection_app/Models/user.dart';
+import 'package:face_liveness_detection_app/Providers/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'admin_appbar.dart';
 import 'tab_navigator.dart';
 
 class Adminpage extends StatefulWidget {
@@ -8,10 +10,14 @@ class Adminpage extends StatefulWidget {
 
   Adminpage({@required this.user});
   @override
-  _AdminpageState createState() => _AdminpageState();
+  _AdminpageState createState() => _AdminpageState(this.user);
 }
 
 class _AdminpageState extends State<Adminpage> {
+  final User user;
+  final AuthService _auth = AuthService();
+  _AdminpageState(this.user);
+
   String _currentPage = "Page1";
   List<String> pageKeys = ["Page1", "Page2", "Page3"];
   Map<String, GlobalKey<NavigatorState>> _navigatorKeys = {
@@ -32,11 +38,9 @@ class _AdminpageState extends State<Adminpage> {
     }
   }
 
-  // final List<Widget> _children = [
-  //   AdminHomePage(),
-  //   AdminInstitutionSc(),
-  //   TestNav(),
-  // ];
+  String capitalize(String s) {
+    return "${s[0].toUpperCase()}${s.substring(1)}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,20 +59,16 @@ class _AdminpageState extends State<Adminpage> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(' Admin Page'),
-          backgroundColor: Color(0xff30384c),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                // do something
-              },
-            )
-          ],
+        appBar: AdAppBar(
+          titlex: new Text(
+            ' Mr. ${capitalize(user.firstName)} ${capitalize(user.lastName)}',
+            style: TextStyle(fontSize: 20.0),
+          ),
+          editProfile: () {},
+          settings: () {},
+          signout: () async {
+            await _auth.signOut();
+          },
         ),
         body: Stack(children: <Widget>[
           _buildOffstageNavigator("Page1"),
