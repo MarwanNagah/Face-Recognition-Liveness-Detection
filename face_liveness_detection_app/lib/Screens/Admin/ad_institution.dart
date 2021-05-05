@@ -15,9 +15,18 @@ class AdminInstitutionSc extends StatefulWidget {
 }
 
 class _AdminInstitutionScState extends State<AdminInstitutionSc> {
+  bool isTest = false;
+
   Future<void> refresh(BuildContext context) async {
     await Provider.of<InstitutionProvider>(context, listen: false)
         .fetchInstitution();
+    isTest = AdminInstitutionSc.isloading;
+  }
+
+  void testChange() {
+    setState(() {
+      isTest = !isTest;
+    });
   }
 
   @override
@@ -32,7 +41,7 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
                         valueColor: new AlwaysStoppedAnimation<Color>(
                             Colors.greenAccent[400])),
                   )
-                : AdminInstitutionSc.isloading
+                : isTest
                     ? RefreshIndicator(
                         onRefresh: () =>
                             refresh(context).then((value) => setState(() {})),
@@ -41,6 +50,7 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
                           child: Consumer<InstitutionProvider>(
                             builder: (context, institutiondata, child) =>
                                 ManagerInstitution(
+                              isTest: testChange,
                               id: institutiondata.institution.id,
                               institutionName:
                                   institutiondata.institution.institutionName,
