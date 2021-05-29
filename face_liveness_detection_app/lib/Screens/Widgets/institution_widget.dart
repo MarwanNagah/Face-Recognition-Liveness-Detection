@@ -1,4 +1,5 @@
 import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/manage_institution.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,16 +10,23 @@ class ManagerInstitution extends StatefulWidget {
   final String appusage;
   final bool isActive;
   final int employeesNumber;
+  Function isTest;
 
   ManagerInstitution(
       {this.id,
       this.institutionName,
       this.appusage,
       this.isActive,
-      this.employeesNumber});
+      this.employeesNumber,
+      this.isTest});
   @override
-  _ManagerInstitutionState createState() => _ManagerInstitutionState(this.id,
-      this.institutionName, this.appusage, this.isActive, this.employeesNumber);
+  _ManagerInstitutionState createState() => _ManagerInstitutionState(
+      this.id,
+      this.institutionName,
+      this.appusage,
+      this.isActive,
+      this.employeesNumber,
+      this.isTest);
 }
 
 class _ManagerInstitutionState extends State<ManagerInstitution> {
@@ -27,9 +35,10 @@ class _ManagerInstitutionState extends State<ManagerInstitution> {
   final String appusage;
   final bool isActive;
   final int employeesNumber;
+  Function isTest;
 
   _ManagerInstitutionState(this.id, this.institutionName, this.appusage,
-      this.isActive, this.employeesNumber);
+      this.isActive, this.employeesNumber, this.isTest);
 
   String capitalize(String s) {
     return "${s[0].toUpperCase()}${s.substring(1)}";
@@ -57,6 +66,7 @@ class _ManagerInstitutionState extends State<ManagerInstitution> {
                 onPressed: () async {
                   try {
                     prov.deleteInstitution(id);
+                    isTest();
                     Navigator.of(context).pop();
                   } catch (error) {
                     scaffold.showSnackBar(

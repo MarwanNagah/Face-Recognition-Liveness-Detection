@@ -26,6 +26,7 @@ class InstitutionProvider with ChangeNotifier {
     var url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json';
     try {
+      _institution = null;
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
       final dbData = json.decode(response.body) as Map<String, dynamic>;
@@ -48,6 +49,9 @@ class InstitutionProvider with ChangeNotifier {
         }
       });
       notifyListeners();
+      if (_institution == null) {
+        AdminInstitutionSc.isloading = false;
+      }
       return null;
     } on Exception catch (e) {
       print(e.toString());
