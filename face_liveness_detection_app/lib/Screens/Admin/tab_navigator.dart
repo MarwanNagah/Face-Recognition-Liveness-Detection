@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'ad_institution.dart';
 import 'adminhomepage.dart';
+import 'employees.dart';
 import 'test.dart';
 
 class TabNavigator extends StatelessWidget {
@@ -16,7 +16,9 @@ class TabNavigator extends StatelessWidget {
       child = AdminHomePage();
     else if (tabItem == "Page2")
       child = AdminInstitutionSc();
-    else if (tabItem == "Page3") child = TestNav();
+    else if (tabItem == "Page3")
+      child = TestNav();
+    else if (tabItem == "Page4") child = EmployeesSc();
 
     return Navigator(
       key: navigatorKey,

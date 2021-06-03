@@ -20,6 +20,11 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
   Future<void> refresh(BuildContext context) async {
     await Provider.of<InstitutionProvider>(context, listen: false)
         .fetchInstitution();
+    Institution adInstitution =
+        Provider.of<InstitutionProvider>(context, listen: false).institution;
+    await Provider.of<InstitutionProvider>(context, listen: false)
+        .fetchEmployeesNo(adInstitution.id);
+
     isTest = AdminInstitutionSc.isloading;
   }
 
