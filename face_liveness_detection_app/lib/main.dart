@@ -9,6 +9,7 @@ import 'package:face_liveness_detection_app/Screens/wrapper.dart';
 import 'Models/user.dart';
 import 'Providers/auth.dart';
 import 'Providers/institutionProvider.dart';
+import 'Screens/Admin/manage_employees.dart';
 import 'Screens/Admin/manage_institution.dart';
 import 'package:face_liveness_detection_app/Screens/Client/face_detect.dart';
 
@@ -52,6 +53,7 @@ class Nav extends StatelessWidget {
                 loggedUser: loggedUser,
               ),
           ManageInstitution.routeName: (ctx) => ManageInstitution(),
+          ManageEmployees.routeName: (ctx) => ManageEmployees(),
         },
       ),
     );
@@ -78,7 +80,7 @@ class _PageNavigatorState extends State<PageNavigator> {
   void initState() {
     super.initState();
     asyncMethod();
-    // _auth.signOut();
+    //_auth.signOut();
   }
 
   void asyncMethod() async {
