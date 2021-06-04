@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:face_liveness_detection_app/Models/institution.dart';
+import 'package:face_liveness_detection_app/Models/notification.dart' as noti;
 
 class InstitutionProvider with ChangeNotifier {
   final User user;
 
   Institution _institution;
   //List<Institution> _institutions = [];
+
+  List<noti.Notification> _institutionNotifications = [];
 
   Institution findById(String id) {
     return _institution;
@@ -23,6 +26,10 @@ class InstitutionProvider with ChangeNotifier {
 
   Institution get institution {
     return _institution;
+  }
+
+  List<noti.Notification> get institutionNotifications {
+    return [..._institutionNotifications];
   }
 
   InstitutionProvider({@required this.user});
@@ -264,5 +271,34 @@ class InstitutionProvider with ChangeNotifier {
       throw HTTPException('Delete failed for showroom whose id is $id');
     }
     exisitingInstitution = null;
+  }
+
+  Future<void> fetchInstitutionNotifications() async {
+    var id = _institution.id;
+    var url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (dbData == null) {
+        return;
+      }
+
+      List<noti.Notification> temp = [];
+      dbData.forEach((key, data) {
+        temp.add(new noti.Notification(
+            id: key,
+            date: DateTime.parse(data['date']),
+            status: data['status'],
+            userID: data['userID']));
+      });
+      _institutionNotifications = temp;
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
   }
 }

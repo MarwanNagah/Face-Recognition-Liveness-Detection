@@ -11,7 +11,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
-import 'package:http/http.dart' as http;
 
 class Client extends User {
   Report clientReport;
@@ -81,8 +80,11 @@ class Client extends User {
     String newURL = await uploadFile(pickedImage, url);
     bool result = await getResult(newURL);
 
-    Notification newNotification = Notification(userID: userID, status: result);
-    newNotification.addNotification(institutionID);
+    if (result == false) {
+      Notification newNotification =
+          Notification(userID: userID, status: false);
+      newNotification.addNotification(institutionID);
+    }
 
     return true;
   }

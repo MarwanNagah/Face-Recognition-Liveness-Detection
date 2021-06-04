@@ -192,10 +192,9 @@ class _FaceDetectState extends State<FaceDetect> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("ashdvasdgvasjdgvcfas ${loggedUser.institutionID}");
-          loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
+          //loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
           //detectFaces().then((value) => showAlertDialog(context));
-          //_auth.signOut();
+          _auth.signOut();
         },
         child: Icon(Icons.check),
       ),
