@@ -92,37 +92,23 @@ class _EmployeesScState extends State<EmployeesSc> {
                           // ),
                         ))
                     : Center(
-                        // esht8l mn awl hena ya ABDO
-                        child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black54,
-                              offset: Offset(2, 6),
-                            )
-                          ],
+                        child: TextButton.icon(
+                        icon: Icon(Icons.add),
+                        label: Text('Tab here to add Employees'),
+                        style: TextButton.styleFrom(
+                          primary: Color(0xff30384c),
+                          textStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontStyle: FontStyle.italic),
                         ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Color(0xff30384c),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.add,
-                              color: Colors.greenAccent[400],
-                              size: 30.0,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ManageEmployees()),
-                              ).then((value) => setState(() {}));
-                            },
-                          ),
-                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ManageEmployees()),
+                          ).then((value) => setState(() {}));
+                        },
                       ));
           }),
     );
