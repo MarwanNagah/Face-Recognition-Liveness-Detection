@@ -13,7 +13,7 @@ import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Providers/auth.dart';
 
 class FaceDetect extends StatefulWidget {
-  final User loggedUser;
+  final Client loggedUser;
 
   FaceDetect({@required this.loggedUser});
 
@@ -35,7 +35,7 @@ class _FaceDetectState extends State<FaceDetect> {
   String finalResult = "Loading...";
   final AuthService _auth = AuthService();
 
-  final User loggedUser;
+  final Client loggedUser;
 
   _FaceDetectState({@required this.loggedUser});
 
@@ -192,10 +192,10 @@ class _FaceDetectState extends State<FaceDetect> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //Client newClient = Client();
-          //newClient.detectFaces(pickedImage, rect, url, loggedUser.fireID);
+          print("ashdvasdgvasjdgvcfas ${loggedUser.institutionID}");
+          loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
           //detectFaces().then((value) => showAlertDialog(context));
-          _auth.signOut();
+          //_auth.signOut();
         },
         child: Icon(Icons.check),
       ),

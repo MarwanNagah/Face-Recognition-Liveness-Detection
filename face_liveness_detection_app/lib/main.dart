@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:face_liveness_detection_app/Models/client.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/admin.dart';
 import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:face_liveness_detection_app/Screens/loading.dart';
@@ -85,10 +86,12 @@ class _PageNavigatorState extends State<PageNavigator> {
 
   void asyncMethod() async {
     await loggedUser.readUser();
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () async {
       if (loggedUser.userType.userTypeName == "Client") {
         //page for client
-        initialPage = FaceDetect(loggedUser: loggedUser);
+        await loggedUser.readInstitution();
+        Client loggedClient = Client(loggedUser);
+        initialPage = FaceDetect(loggedUser: loggedClient);
       } else if (loggedUser.userType.userTypeName == "Manager") {
         //page for manager
         initialPage = Adminpage(user: loggedUser);

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:face_liveness_detection_app/Models/image.dart';
+import 'package:face_liveness_detection_app/Models/notification.dart';
 import 'package:face_liveness_detection_app/Models/report.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
 import 'dart:convert';
@@ -14,6 +15,10 @@ import 'package:http/http.dart' as http;
 
 class Client extends User {
   Report clientReport;
+
+  Client(User user)
+      : super.constructUser(fUser: user.fUser, uid: user.uid, user: user);
+
   void authenticate() {}
 
   Future uploadFile(File pickedImage, String url) async {
@@ -53,8 +58,9 @@ class Client extends User {
       finalResult = "Spoof";
       clientReport.status = false;
     }
+
     await clientReport.addReport();
-    return finalResult;
+    return clientReport.status;
   }
 
   Future detectFaces(
@@ -73,7 +79,10 @@ class Client extends User {
     }
 
     String newURL = await uploadFile(pickedImage, url);
-    await getResult(newURL);
+    bool result = await getResult(newURL);
+
+    Notification newNotification = Notification(userID: userID, status: result);
+    newNotification.addNotification(institutionID);
 
     return true;
   }
