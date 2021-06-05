@@ -86,7 +86,7 @@ class _PageNavigatorState extends State<PageNavigator> {
 
   void asyncMethod() async {
     await loggedUser.readUser();
-    Future.delayed(const Duration(seconds: 1), () async {
+    Future.delayed(const Duration(seconds: 3), () async {
       if (loggedUser.userType.userTypeName == "Client") {
         //page for client
         await loggedUser.readInstitution();

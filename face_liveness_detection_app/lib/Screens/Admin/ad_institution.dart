@@ -24,7 +24,7 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
         Provider.of<InstitutionProvider>(context, listen: false).institution;
     await Provider.of<InstitutionProvider>(context, listen: false)
         .fetchEmployeesNo(adInstitution.id);
-
+    await Provider.of<InstitutionProvider>(context, listen: false).fetchusers();
     isTest = AdminInstitutionSc.isloading;
   }
 

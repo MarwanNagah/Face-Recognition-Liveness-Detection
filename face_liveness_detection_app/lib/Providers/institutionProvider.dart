@@ -1,4 +1,5 @@
 import 'package:face_liveness_detection_app/Models/HTTPException.dart';
+import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/employees.dart';
@@ -128,15 +129,12 @@ class InstitutionProvider with ChangeNotifier {
       if (dbData == null) {
         return null;
       }
-      List<User> InEmployees = [];
+      List<cc.Client> InEmployees = [];
       dbData.forEach((key, data) {
-        InEmployees.add(User(uid: data['employeeID'], fUser: null));
-
-        _institution.employees = InEmployees;
-        EmployeesSc.isloading = true;
-        notifyListeners();
-        return InEmployees;
+        InEmployees.add(cc.Client(User(uid: data['employeeID'], fUser: null)));
       });
+      _institution.employees = InEmployees;
+      EmployeesSc.isloading = true;
       notifyListeners();
       if (_institution.employees == null) {
         EmployeesSc.isloading = false;
@@ -160,17 +158,17 @@ class InstitutionProvider with ChangeNotifier {
         return null;
       }
 
-      List<User> employees = [];
+      List<cc.Client> employees = [];
 
       dbData.forEach((key, data) {
         for (int i = 0; i < _institution.employees.length; i++) {
           if (data['uid'] == _institution.employees[i].uid) {
-            employees.add(User(
+            employees.add(cc.Client(User(
                 uid: key,
                 fUser: null,
                 firstName: data['firstname'],
                 lastName: data['lastName'],
-                eMail: data['eMail']));
+                eMail: data['eMail'])));
           }
         }
       });
@@ -274,6 +272,35 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchInstitutionNotifications() async {
+    var id = _institution.id;
+    var url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (dbData == null) {
+        return;
+      }
+
+      List<noti.Notification> temp = [];
+      dbData.forEach((key, data) {
+        temp.add(new noti.Notification(
+            id: key,
+            date: DateTime.parse(data['date']),
+            status: data['status'],
+            userID: data['userID']));
+      });
+      _institutionNotifications = temp;
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
+  }
+
+  Future<void> fetchInstitutionReports() async {
     var id = _institution.id;
     var url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';

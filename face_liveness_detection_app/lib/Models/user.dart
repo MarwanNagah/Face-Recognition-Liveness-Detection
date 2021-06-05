@@ -35,7 +35,7 @@ class User {
     this.fireID = user.fireID;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
-    this.eMail = user.uid;
+    this.eMail = user.eMail;
     this.userType = user.userType;
     this.institutionID = user.institutionID;
   }
