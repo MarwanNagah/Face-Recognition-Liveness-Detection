@@ -89,12 +89,12 @@ class _PageNavigatorState extends State<PageNavigator> {
   void initState() {
     super.initState();
     asyncMethod();
-    //_auth.signOut();
+    // _auth.signOut();
   }
 
   void asyncMethod() async {
     await loggedUser.readUser();
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (loggedUser.userType.userTypeName == "Client") {
         //page for client
         initialPage = FaceDetect(loggedUser: loggedUser);
@@ -133,7 +133,7 @@ class _FaceDetectState extends State<FaceDetect> {
   bool isFaceDetected = false;
   bool isResultHere = false;
   List<Rect> rect = [];
-  String url = 'http://10.0.2.2:5000/api?';
+  String url = 'http://192.168.1.9:5000/api?';
   String imageURL;
   String imagePath;
   String tokenValue;
@@ -183,7 +183,7 @@ class _FaceDetectState extends State<FaceDetect> {
       isImageLoaded = false;
       isFaceDetected = false;
       isResultHere = false;
-      url = 'http://10.0.2.2:5000/api?';
+      url = 'http://192.168.1.9:5000/api?';
     });
     var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
     imageFile = await tempStore.readAsBytes();
@@ -296,8 +296,8 @@ class _FaceDetectState extends State<FaceDetect> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //detectFaces().then((value) => showAlertDialog(context));
-          _auth.signOut();
+          detectFaces().then((value) => showAlertDialog(context));
+          //_auth.signOut();
         },
         child: Icon(Icons.check),
       ),

@@ -10,24 +10,21 @@ import 'manage_employees.dart';
 class EmployeesSc extends StatefulWidget {
   static const routeName = '/EmployeeSc';
   static bool isloading = false;
+
   @override
   _EmployeesScState createState() => _EmployeesScState();
 }
 
 class _EmployeesScState extends State<EmployeesSc> {
+  //User employee;
   bool isTest = false;
-  User employee;
   Future<void> getemployees(BuildContext context) async {
     await Provider.of<InstitutionProvider>(context, listen: false)
-        .fetchInstitution();
-    Institution adInstitution =
-        Provider.of<InstitutionProvider>(context, listen: false).institution;
-    await Provider.of<InstitutionProvider>(context, listen: false)
-        .fetchEmployeesNo(adInstitution.id);
-
+        .fetchEmployeesNo('test');
     await Provider.of<InstitutionProvider>(context, listen: false).fetchusers();
 
     isTest = EmployeesSc.isloading;
+    print(isTest);
   }
 
   void testChange() {
@@ -39,92 +36,93 @@ class _EmployeesScState extends State<EmployeesSc> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<Object>(
-          future: getemployees(context),
-          builder: (context, snapshot) {
-            return snapshot.connectionState == ConnectionState.waiting
-                ? Center(
-                    child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            Colors.greenAccent[400])),
-                  )
-                : isTest
-                    ? RefreshIndicator(
-                        onRefresh: () => getemployees(context)
-                            .then((value) => setState(() {})),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Consumer<InstitutionProvider>(
-                              builder: (context, employeesdata, child) =>
-                                  ListView.builder(
-                                      itemCount: employeesdata
-                                          .institution.employees.length,
-                                      itemBuilder: (_, i) => Column(
-                                            children: [
-                                              InstitutionEmployees(
-                                                id: employeesdata.institution
-                                                    .employees[i].uid,
-                                                firstname: employeesdata
-                                                    .institution
-                                                    .employees[i]
-                                                    .firstName,
-                                                lastname: employeesdata
-                                                    .institution
-                                                    .employees[i]
-                                                    .lastName,
-                                                email: employeesdata.institution
-                                                    .employees[i].eMail,
-                                              )
-                                            ],
-                                          ))),
-                          // child: Consumer<InstitutionProvider>(
-                          //   builder: (context, institutiondata, child) =>
-                          //       ManagerInstitution(
-                          //     isTest: testChange,
-                          //     id: institutiondata.institution.id,
-                          //     institutionName:
-                          //         institutiondata.institution.institutionName,
-                          //     appusage: institutiondata.institution.appusage,
-                          //     employeesNumber:
-                          //         institutiondata.institution.getEmployeesNo(),
-                          //     isActive: institutiondata.institution.isActive,
-                          //   ),
-                          // ),
-                        ))
-                    : Center(
-                        // esht8l mn awl hena ya ABDO
-                        child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Colors.black54,
-                              offset: Offset(2, 6),
-                            )
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Color(0xff30384c),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.add,
-                              color: Colors.greenAccent[400],
-                              size: 30.0,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ManageEmployees()),
-                              ).then((value) => setState(() {}));
-                            },
+        body: FutureBuilder<Object>(
+            future: getemployees(context),
+            builder: (context, snapshot) {
+              return snapshot.connectionState == ConnectionState.waiting
+                  ? Center(
+                      child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Colors.greenAccent[400])),
+                    )
+                  : isTest
+                      ? RefreshIndicator(
+                          onRefresh: () => getemployees(context)
+                              .then((value) => setState(() {})),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Consumer<InstitutionProvider>(
+                                builder: (context, employeesdata, child) =>
+                                    ListView.builder(
+                                        itemCount: employeesdata
+                                            .institutionemp.employees.length,
+                                        itemBuilder: (_, i) => Column(
+                                              children: [
+                                                InstitutionEmployees(
+                                                  id: employeesdata
+                                                      .institutionemp
+                                                      .employees[i]
+                                                      .uid,
+                                                  firstname: employeesdata
+                                                      .institutionemp
+                                                      .employees[i]
+                                                      .firstName,
+                                                  lastname: employeesdata
+                                                      .institutionemp
+                                                      .employees[i]
+                                                      .lastName,
+                                                  email: employeesdata
+                                                      .institutionemp
+                                                      .employees[i]
+                                                      .eMail,
+                                                )
+                                              ],
+                                            ))),
                           ),
-                        ),
-                      ));
-          }),
-    );
+                        )
+                      : Center(
+                          // esht8l mn awl hena ya ABDO
+                          child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 4,
+                                color: Colors.black54,
+                                offset: Offset(2, 6),
+                              )
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Color(0xff30384c),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: Colors.greenAccent[400],
+                                size: 30.0,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ManageEmployees()),
+                                ).then((value) => setState(() {}));
+                              },
+                            ),
+                          ),
+                        ));
+            }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ManageEmployees()),
+            ).then((value) => setState(() {}));
+          },
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.greenAccent[400],
+        ));
   }
 }

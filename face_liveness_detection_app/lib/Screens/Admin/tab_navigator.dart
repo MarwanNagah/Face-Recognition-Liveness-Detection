@@ -4,10 +4,21 @@ import 'adminhomepage.dart';
 import 'employees.dart';
 import 'test.dart';
 
-class TabNavigator extends StatelessWidget {
-  TabNavigator({this.navigatorKey, this.tabItem});
+class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final String tabItem;
+  TabNavigator({this.navigatorKey, this.tabItem});
+
+  @override
+  _TabNavigatorState createState() =>
+      _TabNavigatorState(this.navigatorKey, this.tabItem);
+}
+
+class _TabNavigatorState extends State<TabNavigator> {
+  final GlobalKey<NavigatorState> navigatorKey;
+  final String tabItem;
+
+  _TabNavigatorState(this.navigatorKey, this.tabItem);
 
   @override
   Widget build(BuildContext context) {

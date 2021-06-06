@@ -11,6 +11,7 @@ class InstitutionProvider with ChangeNotifier {
   final User user;
 
   Institution _institution;
+  Institution _institutionemp;
   //List<Institution> _institutions = [];
 
   Institution findById(String id) {
@@ -23,6 +24,10 @@ class InstitutionProvider with ChangeNotifier {
 
   Institution get institution {
     return _institution;
+  }
+
+  Institution get institutionemp {
+    return _institutionemp;
   }
 
   InstitutionProvider({@required this.user});
@@ -46,71 +51,28 @@ class InstitutionProvider with ChangeNotifier {
             institutionName: data['institutionName'],
             appusage: data['appUsage'],
             isActive: data['isActive'],
-            //employees: data['employees'],
           );
-          _institution = dbInstitution;
-          AdminInstitutionSc.isloading = true;
-          notifyListeners();
-          return dbInstitution;
         }
       });
+      _institution = dbInstitution;
+      _institutionemp = dbInstitution;
+      AdminInstitutionSc.isloading = true;
       notifyListeners();
       if (_institution == null) {
         AdminInstitutionSc.isloading = false;
       }
-      return null;
     } on Exception catch (e) {
       print(e.toString());
       throw (e);
     }
   }
 
-  // Future<void> fetchEmployees() async {
-  //   final url =
-  //       'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions.json';
+  Future<void> fetchEmployeesNo(String test) async {
+    if (_institutionemp == null) {
+      await this.fetchInstitution();
+    }
+    String id = _institution.id;
 
-  //   try {
-  //     Uri uri = Uri.parse(url);
-  //     final response = await http.get(uri);
-  //     final dbData = json.decode(response.body) as Map<String, dynamic>;
-  //     if (dbData == null) {
-  //       return null;
-  //     }
-  //     String institutionID;
-  //     dbData.forEach((key, data) {
-  //       if (data['adminId'] == user.uid) {
-  //         institutionID = key;
-  //       }
-  //     });
-  //     final url2 =
-  //         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$institutionID/employees.json';
-  //     Uri uri2 = Uri.parse(url2);
-  //     final response2 = await http.get(uri2);
-  //     final dbData2 = json.decode(response2.body) as Map<String, dynamic>;
-  //     if (dbData2 == null) {
-  //       return null;
-  //     }
-  //     List<User> InEmployees = [];
-  //     dbData.forEach((key, data) {
-  //       InEmployees.add(User(uid: data['employeeID'], fUser: null));
-
-  //       _institution.employees = InEmployees;
-  //       EmployeesSc.isloading = true;
-  //       notifyListeners();
-  //       return InEmployees;
-  //     });
-  //     notifyListeners();
-  //     if (_institution.employees == null) {
-  //       EmployeesSc.isloading = false;
-  //     }
-  //     return null;
-  //   } on Exception catch (e) {
-  //     print(e.toString());
-  //     throw (e);
-  //   }
-  // }
-
-  Future<void> fetchEmployeesNo(String id) async {
     final url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/employees.json';
 
@@ -124,17 +86,18 @@ class InstitutionProvider with ChangeNotifier {
       List<User> InEmployees = [];
       dbData.forEach((key, data) {
         InEmployees.add(User(uid: data['employeeID'], fUser: null));
-
-        _institution.employees = InEmployees;
-        EmployeesSc.isloading = true;
-        notifyListeners();
-        return InEmployees;
       });
+      _institution.employees = InEmployees;
+      _institutionemp.employees = InEmployees;
+
+      print("done");
+      EmployeesSc.isloading = true;
+      //print(EmployeesSc.isloading);
       notifyListeners();
-      if (_institution.employees == null) {
+      if (_institutionemp.employees == null) {
+        print("true");
         EmployeesSc.isloading = false;
       }
-      return null;
     } on Exception catch (e) {
       print(e.toString());
       throw (e);
@@ -156,8 +119,8 @@ class InstitutionProvider with ChangeNotifier {
       List<User> employees = [];
 
       dbData.forEach((key, data) {
-        for (int i = 0; i < _institution.employees.length; i++) {
-          if (data['uid'] == _institution.employees[i].uid) {
+        for (int i = 0; i < _institutionemp.employees.length; i++) {
+          if (data['uid'] == _institutionemp.employees[i].uid) {
             employees.add(User(
                 uid: key,
                 fUser: null,
@@ -167,10 +130,10 @@ class InstitutionProvider with ChangeNotifier {
           }
         }
       });
-      _institution.employees = employees;
 
+      _institutionemp.employees = employees;
+      EmployeesSc.isloading = true;
       notifyListeners();
-      return employees;
     } on Exception catch (e) {
       print(e.toString());
       throw (e);
