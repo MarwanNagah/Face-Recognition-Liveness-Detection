@@ -16,6 +16,7 @@ class User {
   String lastName;
   String eMail;
   UserType userType;
+  String institutionID;
 
   User({
     @required this.uid,
@@ -27,6 +28,17 @@ class User {
     this.eMail,
     this.userType,
   });
+
+  User.constructUser(
+      {@required this.uid, @required this.fUser, @required User user}) {
+    this.token = user.uid;
+    this.fireID = user.fireID;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.eMail = user.eMail;
+    this.userType = user.userType;
+    this.institutionID = user.institutionID;
+  }
 
   Map<String, dynamic> get map {
     return {
@@ -86,5 +98,20 @@ class User {
     UserType type = await temp.findById(id);
     this.userType = type;
     return type;
+  }
+
+  readInstitution() async {
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users/$fireID.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+      this.institutionID = dbData['institutionID'];
+      print(this.institutionID);
+    } catch (e) {
+      print(e);
+    }
   }
 }

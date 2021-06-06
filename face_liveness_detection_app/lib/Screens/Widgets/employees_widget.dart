@@ -32,28 +32,39 @@ class _InstitutionEmployeesState extends State<InstitutionEmployees> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-        //padding: const EdgeInsets.only(right: 12.0),
-        child: Column(
-          children: [
-            Text(
-              '$firstname  $lastname',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-            Text(
-              '$email',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-          ],
-        ),
+      color: Colors.blueGrey[100],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('$firstname $lastname'),
+            subtitle: Text('$email'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              TextButton(
+                child: const Text('DELETE'),
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  backgroundColor: Colors.red,
+                ),
+                onPressed: () {/* ... */},
+              ),
+              const SizedBox(width: 8),
+              TextButton(
+                child: const Text('Edit'),
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  backgroundColor: Colors.greenAccent[400],
+                ),
+                onPressed: () {/* ... */},
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,10 @@
+import 'package:face_liveness_detection_app/Models/institution.dart';
+import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:face_liveness_detection_app/Screens/Widgets/notification_widget.dart';
 
 class AdminHomePage extends StatefulWidget {
   @override
@@ -16,104 +20,58 @@ class _AdminHomePageState extends State<AdminHomePage> {
     _controller = CalendarController();
   }
 
+  Future<void> refresh(BuildContext context) async {
+    await Provider.of<InstitutionProvider>(context, listen: false)
+        .fetchInstitutionNotifications();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(0),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              child: TableCalendar(
-                calendarStyle: CalendarStyle(
-                  todayColor: Colors.greenAccent[400],
-                  selectedColor: Color(0xff30384c),
-                ),
-                calendarController: _controller,
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 30),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular((50)),
-                      topRight: Radius.circular(50)),
-                  color: Color(0xff30384c)),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 50),
-                          child: Text(
-                            "Report",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                child: Icon(
-                                  CupertinoIcons.person_alt_circle,
-                                  color: Colors.greenAccent[400],
-                                  size: 30,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 10, right: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "Abdelrahman",
-                                      style: (TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      )),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text("Date :  12/4/2021",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.normal,
-                                        ))
+      body: FutureBuilder<Object>(
+          future: refresh(context),
+          builder: (context, snapshot) {
+            return snapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            Colors.greenAccent[400])),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => refresh(context),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Consumer<InstitutionProvider>(
+                          builder: (context, notificationData, child) =>
+                              ListView.builder(
+                                itemCount: notificationData
+                                    .institutionNotifications.length,
+                                itemBuilder: (_, i) => Column(
+                                  children: [
+                                    NotficationWidget(
+                                      date: notificationData
+                                          .institutionNotifications[i].date,
+                                      userId: notificationData
+                                          .institutionNotifications[i].userId,
+                                      status: notificationData
+                                          .institutionNotifications[i].status,
+                                    )
                                   ],
                                 ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 60),
-                                child: Text(
-                                  "Spoof",
-                                  style: (TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  )),
-                                ),
-                              ),
-                            ],
+                              )
+                          /*ManagerInstitution(
+                          isTest: testChange,
+                          id: institutiondata.institution.id,
+                          institutionName:
+                              institutiondata.institution.institutionName,
+                          appusage: institutiondata.institution.appusage,
+                          employeesNumber:
+                              institutiondata.institution.getEmployeesNo(),
+                          isActive: institutiondata.institution.isActive,
+                        ),*/
                           ),
-                        )
-                      ])
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+                    ));
+          }),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:face_liveness_detection_app/Models/HTTPException.dart';
+import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/employees.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:face_liveness_detection_app/Models/institution.dart';
+import 'package:face_liveness_detection_app/Models/notification.dart' as noti;
 
 class InstitutionProvider with ChangeNotifier {
   final User user;
@@ -13,6 +15,8 @@ class InstitutionProvider with ChangeNotifier {
   Institution _institution;
   Institution _institutionemp;
   //List<Institution> _institutions = [];
+
+  List<noti.Notification> _institutionNotifications = [];
 
   Institution findById(String id) {
     return _institution;
@@ -28,6 +32,10 @@ class InstitutionProvider with ChangeNotifier {
 
   Institution get institutionemp {
     return _institutionemp;
+  }
+
+  List<noti.Notification> get institutionNotifications {
+    return [..._institutionNotifications];
   }
 
   InstitutionProvider({@required this.user});
@@ -61,7 +69,7 @@ class InstitutionProvider with ChangeNotifier {
       if (_institution == null) {
         AdminInstitutionSc.isloading = false;
       }
-    } on Exception catch (e) {
+    } catch (e) {
       print(e.toString());
       throw (e);
     }
@@ -83,9 +91,9 @@ class InstitutionProvider with ChangeNotifier {
       if (dbData == null) {
         return null;
       }
-      List<User> InEmployees = [];
+      List<cc.Client> InEmployees = [];
       dbData.forEach((key, data) {
-        InEmployees.add(User(uid: data['employeeID'], fUser: null));
+        InEmployees.add(cc.Client(User(uid: data['employeeID'], fUser: null)));
       });
       _institution.employees = InEmployees;
       _institutionemp.employees = InEmployees;
@@ -116,17 +124,17 @@ class InstitutionProvider with ChangeNotifier {
         return null;
       }
 
-      List<User> employees = [];
+      List<cc.Client> employees = [];
 
       dbData.forEach((key, data) {
         for (int i = 0; i < _institutionemp.employees.length; i++) {
           if (data['uid'] == _institutionemp.employees[i].uid) {
-            employees.add(User(
+            employees.add(cc.Client(User(
                 uid: key,
                 fUser: null,
                 firstName: data['firstname'],
                 lastName: data['lastName'],
-                eMail: data['eMail']));
+                eMail: data['eMail'])));
           }
         }
       });
@@ -227,5 +235,63 @@ class InstitutionProvider with ChangeNotifier {
       throw HTTPException('Delete failed for showroom whose id is $id');
     }
     exisitingInstitution = null;
+  }
+
+  Future<void> fetchInstitutionNotifications() async {
+    var id = _institution.id;
+    var url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (dbData == null) {
+        return;
+      }
+
+      List<noti.Notification> temp = [];
+      dbData.forEach((key, data) {
+        temp.add(new noti.Notification(
+            id: key,
+            date: DateTime.parse(data['date']),
+            status: data['status'],
+            userID: data['userID']));
+      });
+      _institutionNotifications = temp;
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
+  }
+
+  Future<void> fetchInstitutionReports() async {
+    var id = _institution.id;
+    var url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (dbData == null) {
+        return;
+      }
+
+      List<noti.Notification> temp = [];
+      dbData.forEach((key, data) {
+        temp.add(new noti.Notification(
+            id: key,
+            date: DateTime.parse(data['date']),
+            status: data['status'],
+            userID: data['userID']));
+      });
+      _institutionNotifications = temp;
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
   }
 }
