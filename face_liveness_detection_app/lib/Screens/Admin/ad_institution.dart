@@ -4,6 +4,7 @@ import 'package:face_liveness_detection_app/Screens/Widgets/institution_widget.d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'employees.dart';
 import 'manage_institution.dart';
 
 class AdminInstitutionSc extends StatefulWidget {
@@ -20,11 +21,13 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
   Future<void> refresh(BuildContext context) async {
     await Provider.of<InstitutionProvider>(context, listen: false)
         .fetchInstitution();
-    Institution adInstitution =
-        Provider.of<InstitutionProvider>(context, listen: false).institution;
+    // Institution adInstitution =
+    //     Provider.of<InstitutionProvider>(context, listen: false).institution;
     await Provider.of<InstitutionProvider>(context, listen: false)
-        .fetchEmployeesNo(adInstitution.id);
-    await Provider.of<InstitutionProvider>(context, listen: false).fetchusers();
+        .fetchEmployeesNo('test');
+
+    //await Provider.of<InstitutionProvider>(context, listen: false).fetchusers();
+
     isTest = AdminInstitutionSc.isloading;
   }
 
@@ -49,7 +52,11 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
                 : isTest
                     ? RefreshIndicator(
                         onRefresh: () =>
-                            refresh(context).then((value) => setState(() {})),
+                            refresh(context).then((value) => setState(() {
+                                  Provider.of<InstitutionProvider>(context,
+                                          listen: false)
+                                      .fetchusers();
+                                })),
                         child: Padding(
                           padding: EdgeInsets.all(8),
                           child: Consumer<InstitutionProvider>(

@@ -81,12 +81,12 @@ class _PageNavigatorState extends State<PageNavigator> {
   void initState() {
     super.initState();
     asyncMethod();
-    //_auth.signOut();
+    // _auth.signOut();
   }
 
   void asyncMethod() async {
     await loggedUser.readUser();
-    Future.delayed(const Duration(seconds: 3), () async {
+    Future.delayed(const Duration(seconds: 2), () async {
       if (loggedUser.userType.userTypeName == "Client") {
         //page for client
         await loggedUser.readInstitution();

@@ -12,7 +12,8 @@ class InstitutionEmployees extends StatefulWidget {
     this.lastname,
     this.email,
   }) {
-    print("ID: $id /// firstname : $firstname //// lastname : $lastname");
+    //print("ID: $id /// firstname : $firstname //// lastname : $lastname");
+    print("emp widget");
   }
 
   @override

@@ -137,7 +137,7 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                                   TextStyle(color: Colors.black, fontSize: 40),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'User',
+                                    text: 'Employee',
                                     style: TextStyle(
                                         color: Colors.greenAccent[400])),
                               ],
@@ -293,7 +293,7 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                           decoration: InputDecoration(
                             border: new OutlineInputBorder(
                                 borderSide: new BorderSide(color: Colors.teal)),
-                            labelText: 'Conferm Password',
+                            labelText: 'Confirm Password',
                             prefixIcon: const Icon(
                               Icons.lock,
                               color: Colors.green,
