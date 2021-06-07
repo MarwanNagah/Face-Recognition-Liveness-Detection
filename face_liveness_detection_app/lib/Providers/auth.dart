@@ -52,6 +52,7 @@ class AuthService {
     String password,
     String firstName,
     String lastName,
+    String institutionID = "",
     int userType,
   }) async {
     UserType newType = UserType(userTypeID: userType, userTypeName: 'Manager');
@@ -67,6 +68,7 @@ class AuthService {
         firstName: firstName,
         lastName: lastName,
         userType: newType,
+        institutionID: institutionID,
       );
       signedinUser.register();
       return _userFromFirebaseUser(user);

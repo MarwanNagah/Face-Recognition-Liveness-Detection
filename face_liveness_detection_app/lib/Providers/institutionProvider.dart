@@ -15,15 +15,16 @@ class InstitutionProvider with ChangeNotifier {
   Institution _institution;
   Institution _institutionemp;
   //List<Institution> _institutions = [];
-
+  cc.Client _empresult;
   List<noti.Notification> _institutionNotifications = [];
 
   Institution findById(String id) {
     return _institution;
   }
 
-  Future<User> findEmployeeById(String id) async {
-    return _institution.employees.firstWhere((employee) => employee.uid == id);
+  cc.Client findEmployeeById(String id) {
+    return _institutionemp.employees
+        .firstWhere((employee) => employee.uid == id);
   }
 
   Institution get institution {
@@ -32,6 +33,10 @@ class InstitutionProvider with ChangeNotifier {
 
   Institution get institutionemp {
     return _institutionemp;
+  }
+
+  cc.Client get empresult {
+    return _empresult;
   }
 
   List<noti.Notification> get institutionNotifications {
@@ -98,12 +103,10 @@ class InstitutionProvider with ChangeNotifier {
       _institution.employees = InEmployees;
       _institutionemp.employees = InEmployees;
 
-      print("done");
       EmployeesSc.isloading = true;
       //print(EmployeesSc.isloading);
       notifyListeners();
       if (_institutionemp.employees == null) {
-        print("true");
         EmployeesSc.isloading = false;
       }
     } on Exception catch (e) {
@@ -130,8 +133,9 @@ class InstitutionProvider with ChangeNotifier {
         for (int i = 0; i < _institutionemp.employees.length; i++) {
           if (data['uid'] == _institutionemp.employees[i].uid) {
             employees.add(cc.Client(User(
-                uid: key,
+                uid: data['uid'],
                 fUser: null,
+                fireID: key,
                 firstName: data['firstname'],
                 lastName: data['lastName'],
                 eMail: data['eMail'])));
@@ -145,6 +149,34 @@ class InstitutionProvider with ChangeNotifier {
     } on Exception catch (e) {
       print(e.toString());
       throw (e);
+    }
+  }
+
+  Future<void> readUserbyID(String id) async {
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+      User employee;
+      dbData.forEach((key, value) async {
+        if (value['uid'] == id) {
+          employee = new User(
+            uid: id,
+            fUser: null,
+            fireID: key,
+            eMail: value['eMail'],
+            firstName: value['firstname'],
+            lastName: value['lastName'],
+          );
+          _empresult = cc.Client(employee);
+          notifyListeners();
+        }
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -179,7 +211,7 @@ class InstitutionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addEmployeeToInstitution(String id, User employee) async {
+  Future<void> addEmployeeToInstitution(String id, cc.Client employee) async {
     final url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/employees.json';
 
@@ -194,6 +226,7 @@ class InstitutionProvider with ChangeNotifier {
       EmployeesSc.isloading = true;
       notifyListeners();
     } catch (error) {
+      print('Catch me if you can');
       print(error);
       throw error;
     }
@@ -294,4 +327,23 @@ class InstitutionProvider with ChangeNotifier {
       throw (e);
     }
   }
+
+  // Future<void> deleteEmployee(String id, String empid) async {
+  //   final url =
+  //       'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/employees/$empid.json';
+  //   var exisitingInstitution = _institution;
+  //   _institution = null;
+  //   AdminInstitutionSc.isloading = false;
+  //   notifyListeners();
+  //   Uri uri = Uri.parse(url);
+  //   final response = await http.delete(uri);
+  //   if (response.statusCode >= 400) {
+  //     print("response Code : ${response.statusCode}");
+  //     AdminInstitutionSc.isloading = true;
+  //     _institution = exisitingInstitution;
+  //     notifyListeners();
+  //     throw HTTPException('Delete failed for showroom whose id is $id');
+  //   }
+  //   exisitingInstitution = null;
+  // }
 }

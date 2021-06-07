@@ -5,6 +5,7 @@ import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:provider/provider.dart';
 
 class User {
@@ -18,16 +19,16 @@ class User {
   UserType userType;
   String institutionID;
 
-  User({
-    @required this.uid,
-    @required this.fUser,
-    this.token,
-    this.fireID,
-    this.firstName,
-    this.lastName,
-    this.eMail,
-    this.userType,
-  });
+  User(
+      {@required this.uid,
+      @required this.fUser,
+      this.token,
+      this.fireID,
+      this.firstName,
+      this.lastName,
+      this.eMail,
+      this.userType,
+      this.institutionID});
 
   User.constructUser(
       {@required this.uid, @required this.fUser, @required User user}) {
@@ -49,6 +50,7 @@ class User {
       "usertype": userType,
       "fUser": fUser,
       "token": token,
+      "institutionID": institutionID
     };
   }
 
@@ -64,6 +66,7 @@ class User {
               'lastName': this.lastName,
               'eMail': this.eMail,
               'usertype': this.userType.userTypeID,
+              'institutionID': this.institutionID,
             }))
         .catchError((error) {
       print(error);
@@ -113,5 +116,21 @@ class User {
     } catch (e) {
       print(e);
     }
+  }
+
+  updateUser(String id, User newUser) async {
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users/$id.json';
+    Uri uri = Uri.parse(url);
+    return http
+        .patch(uri,
+            body: json.encode({
+              'firstname': newUser.firstName,
+              'lastName': newUser.lastName,
+              'eMail': newUser.eMail,
+            }))
+        .catchError((error) {
+      print(error);
+    });
   }
 }

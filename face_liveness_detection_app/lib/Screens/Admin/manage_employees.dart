@@ -2,6 +2,7 @@ import 'package:face_liveness_detection_app/Models/institution.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Providers/auth.dart';
 import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class ManageEmployees extends StatefulWidget {
 class _ManageEmployeesState extends State<ManageEmployees> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
+  User usergetdata;
 
   var isloading = false;
   var isInit = true;
@@ -24,33 +26,35 @@ class _ManageEmployeesState extends State<ManageEmployees> {
   RegExp regmail =
       new RegExp(r"^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}");
 
-  var editEmployee = User(
+  var editEmployee = cc.Client(User(
     uid: null,
     fUser: null,
     firstName: '',
     lastName: '',
     eMail: '',
-  );
+  ));
   var intialValues = {
     'firstName': '',
     'lastName': '',
-    'eMail': true,
+    'eMail': '',
   };
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (isInit) {
       final userId = ModalRoute.of(context).settings.arguments as String;
-      // if (userId != null) {
-      //   editEmployee = Provider.of<InstitutionProvider>(context, listen: false)
-      //       .findEmployeeById(userId);
-
-      //   intialValues = {
-      //     'firstName': editEmployee.firstName,
-      //     'lastName': editEmployee.lastName,
-      //     'eMail': editEmployee.eMail
-      //   };
-      // }
+      if (userId != null) {
+        print(userId);
+        // await Provider.of<InstitutionProvider>(context, listen: false)
+        //     .readUserbyID(userId);
+        editEmployee =
+            Provider.of<InstitutionProvider>(context, listen: false).empresult;
+        intialValues = {
+          'firstName': editEmployee.firstName,
+          'lastName': editEmployee.lastName,
+          'eMail': editEmployee.eMail
+        };
+      }
     }
     isInit = false;
     super.didChangeDependencies();
@@ -73,22 +77,26 @@ class _ManageEmployeesState extends State<ManageEmployees> {
     //     await Provider.of<InstitutionProvider>(context, listen: false)
     //         .addInstitution(editInstitution);
     try {
-      await Provider.of<InstitutionProvider>(context, listen: false)
-          .fetchInstitution();
-      Institution adInstitution =
-          Provider.of<InstitutionProvider>(context, listen: false).institution;
-      User empresult = await _auth.registerWithEmailAndPassword(
-        email: editEmployee.eMail,
-        password: password,
-        userType: 0,
-        firstName: editEmployee.firstName,
-        lastName: editEmployee.lastName,
-      );
-
-      await Provider.of<InstitutionProvider>(context, listen: false)
-          .addEmployeeToInstitution(adInstitution.id, empresult);
-      print("admin id instit : ${adInstitution.id}");
-      print("employee id  : ${empresult.uid}");
+      if (editEmployee.uid != null) {
+      } else {
+        await Provider.of<InstitutionProvider>(context, listen: false)
+            .fetchInstitution();
+        Institution adInstitution =
+            Provider.of<InstitutionProvider>(context, listen: false)
+                .institution;
+        User empresult = await _auth.registerWithEmailAndPassword(
+            email: editEmployee.eMail,
+            password: password,
+            userType: 0,
+            firstName: editEmployee.firstName,
+            lastName: editEmployee.lastName,
+            institutionID: adInstitution.id);
+        cc.Client employee = cc.Client(empresult);
+        await Provider.of<InstitutionProvider>(context, listen: false)
+            .addEmployeeToInstitution(adInstitution.id, employee);
+        print("admin id instit : ${adInstitution.id}");
+        print("employee id  : ${empresult.uid}");
+      }
     } catch (error) {
       await showDialog(
         context: context,
@@ -116,6 +124,10 @@ class _ManageEmployeesState extends State<ManageEmployees> {
 
   @override
   Widget build(BuildContext context) {
+    var check = false;
+    if (editEmployee.uid != null) {
+      check = true;
+    }
     return Scaffold(
       body: isloading
           ? Center(
@@ -127,25 +139,43 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                   key: _formKey,
                   child: ListView(
                     children: <Widget>[
-                      Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.only(top: 50.0),
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Add ",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 40),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: 'Employee',
-                                    style: TextStyle(
-                                        color: Colors.greenAccent[400])),
-                              ],
-                            ),
-                          )),
+                      check
+                          ? Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 50.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Edit ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 40),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Employee',
+                                        style: TextStyle(
+                                            color: Colors.greenAccent[400])),
+                                  ],
+                                ),
+                              ))
+                          : Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 50.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Add ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 40),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Employee',
+                                        style: TextStyle(
+                                            color: Colors.greenAccent[400])),
+                                  ],
+                                ),
+                              )),
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 50, 10, 10),
                         child: TextFormField(
+                            initialValue: intialValues['firstName'],
                             decoration: InputDecoration(
                               border: new OutlineInputBorder(
                                   borderSide:
@@ -165,17 +195,18 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                                 return null;
                             },
                             onSaved: (value) {
-                              editEmployee = User(
+                              editEmployee = cc.Client(User(
                                   uid: editEmployee.uid,
                                   fUser: null,
                                   firstName: value,
                                   lastName: editEmployee.lastName,
-                                  eMail: editEmployee.eMail);
+                                  eMail: editEmployee.eMail));
                             }),
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                         child: TextFormField(
+                            initialValue: intialValues['lastName'],
                             decoration: InputDecoration(
                               border: new OutlineInputBorder(
                                   borderSide:
@@ -195,17 +226,18 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                                 return null;
                             },
                             onSaved: (value) {
-                              editEmployee = User(
+                              editEmployee = cc.Client(User(
                                   uid: editEmployee.uid,
                                   fUser: null,
                                   firstName: editEmployee.firstName,
                                   lastName: value,
-                                  eMail: editEmployee.eMail);
+                                  eMail: editEmployee.eMail));
                             }),
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                         child: TextFormField(
+                            initialValue: intialValues['eMail'],
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               border: new OutlineInputBorder(
@@ -226,12 +258,12 @@ class _ManageEmployeesState extends State<ManageEmployees> {
                                 return null;
                             },
                             onSaved: (value) {
-                              editEmployee = User(
+                              editEmployee = cc.Client(User(
                                   uid: editEmployee.uid,
                                   fUser: null,
                                   firstName: editEmployee.firstName,
                                   lastName: editEmployee.lastName,
-                                  eMail: value);
+                                  eMail: value));
                             }),
                       ),
                       Container(

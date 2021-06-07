@@ -81,7 +81,7 @@ class _PageNavigatorState extends State<PageNavigator> {
   void initState() {
     super.initState();
     asyncMethod();
-    // _auth.signOut();
+    //_auth.signOut();
   }
 
   void asyncMethod() async {
