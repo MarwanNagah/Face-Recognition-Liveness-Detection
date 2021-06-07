@@ -1,15 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
 import 'package:face_liveness_detection_app/Models/client.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:face_liveness_detection_app/result.dart';
-import 'package:path/path.dart' as Path;
-import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Providers/auth.dart';
 
 class FaceDetect extends StatefulWidget {
@@ -143,8 +135,6 @@ class _FaceDetectState extends State<FaceDetect> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text("Face Detection"),

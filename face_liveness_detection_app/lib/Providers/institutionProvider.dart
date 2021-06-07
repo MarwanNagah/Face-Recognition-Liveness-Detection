@@ -312,10 +312,10 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchReports() async {
-    while (_institution == null) {
+    while (_institutionemp == null) {
       await Future.delayed(Duration(seconds: 1));
     }
-    while (_institution.employees.isEmpty) {
+    while (_institutionemp.employees.isEmpty) {
       await Future.delayed(Duration(seconds: 1));
     }
 
@@ -325,9 +325,7 @@ class InstitutionProvider with ChangeNotifier {
     institutionReports = [];
 
     for (int i = 0; i < clientsSize; i++) {
-      var id = _institution.employees[i].uid;
-      print(id);
-
+      var id = _institutionemp.employees[i].fireID;
       await fetchIndvidualReportClient(id);
     }
     notifyListeners();
@@ -340,10 +338,12 @@ class InstitutionProvider with ChangeNotifier {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
       final dbData = json.decode(response.body) as Map<String, dynamic>;
-
+      print('111');
+      print(dbData);
       if (dbData == null) {
         return;
       }
+      print('112');
 
       dbData.forEach((key, data) {
         institutionReports.add(new Report(
