@@ -1,5 +1,6 @@
 import 'package:face_liveness_detection_app/Models/HTTPException.dart';
 import 'package:face_liveness_detection_app/Models/client.dart' as cc;
+import 'package:face_liveness_detection_app/Models/report.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
 import 'package:face_liveness_detection_app/Screens/Admin/employees.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:face_liveness_detection_app/Models/institution.dart';
 import 'package:face_liveness_detection_app/Models/notification.dart' as noti;
+import 'package:face_liveness_detection_app/Models/image.dart' as img;
 
 class InstitutionProvider with ChangeNotifier {
   final User user;
@@ -17,6 +19,12 @@ class InstitutionProvider with ChangeNotifier {
   //List<Institution> _institutions = [];
   cc.Client _empresult;
   List<noti.Notification> _institutionNotifications = [];
+
+  List<Report> institutionReports = [];
+
+  cc.Client findClientById(String id) {
+    return _institution.employees.firstWhere((client) => client.uid == id);
+  }
 
   Institution findById(String id) {
     return _institution;
@@ -271,6 +279,9 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchInstitutionNotifications() async {
+    if (_institution == null) {
+      await this.fetchInstitution();
+    }
     var id = _institution.id;
     var url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
@@ -299,10 +310,29 @@ class InstitutionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchInstitutionReports() async {
-    var id = _institution.id;
+  Future<void> fetchReports() async {
+    if (_institution == null) {
+      await this.fetchInstitution();
+    }
+    if (_institution.employees.isEmpty) {
+      await this.fetchEmployeesNo(_institution.id);
+      await this.fetchusers();
+    }
+    print('test11111 ${_institution.employees.length}');
+    var clientsSize = _institution.employees.length;
+
+    institutionReports = [];
+
+    for (int i = 0; i < clientsSize; i++) {
+      var id = _institution.employees[i].uid;
+
+      await fetchIndvidualReportClient(id);
+    }
+  }
+
+  fetchIndvidualReportClient(String clientID) async {
     var url =
-        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users/$clientID/Report.json';
     try {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
@@ -312,16 +342,15 @@ class InstitutionProvider with ChangeNotifier {
         return;
       }
 
-      List<noti.Notification> temp = [];
       dbData.forEach((key, data) {
-        temp.add(new noti.Notification(
-            id: key,
-            date: DateTime.parse(data['date']),
-            status: data['status'],
-            userID: data['userID']));
+        institutionReports.add(new Report(
+          reportID: key,
+          reportDate: DateTime.parse(data['ReportDate']),
+          status: data['Status'],
+          takenImage: new img.Image(imageID: data['imageID']),
+          userID: clientID,
+        ));
       });
-      _institutionNotifications = temp;
-      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
       throw (e);

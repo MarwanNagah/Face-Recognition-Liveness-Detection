@@ -28,7 +28,7 @@ class _TabNavigatorState extends State<TabNavigator> {
     else if (tabItem == "Page2")
       child = AdminInstitutionSc();
     else if (tabItem == "Page3")
-      child = TestNav();
+      child = Reports();
     else if (tabItem == "Page4") child = EmployeesSc();
 
     return Navigator(
