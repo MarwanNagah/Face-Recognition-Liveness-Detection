@@ -72,6 +72,7 @@ class InstitutionProvider with ChangeNotifier {
       });
       _institution = dbInstitution;
       _institutionemp = dbInstitution;
+
       AdminInstitutionSc.isloading = true;
       notifyListeners();
       if (_institution == null) {
@@ -246,8 +247,8 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchInstitutionNotifications() async {
-    if (_institution == null) {
-      await this.fetchInstitution();
+    while (_institution == null) {
+      await Future.delayed(Duration(seconds: 1));
     }
     var id = _institution.id;
     var url =
@@ -278,13 +279,13 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchReports() async {
-    if (_institution == null) {
-      await this.fetchInstitution();
+    while (_institution == null) {
+      await Future.delayed(Duration(seconds: 1));
     }
-    if (_institution.employees.isEmpty) {
-      await this.fetchEmployeesNo(_institution.id);
-      await this.fetchusers();
+    while (_institution.employees.isEmpty) {
+      await Future.delayed(Duration(seconds: 1));
     }
+
     print('test11111 ${_institution.employees.length}');
     var clientsSize = _institution.employees.length;
 
@@ -292,9 +293,11 @@ class InstitutionProvider with ChangeNotifier {
 
     for (int i = 0; i < clientsSize; i++) {
       var id = _institution.employees[i].uid;
+      print(id);
 
       await fetchIndvidualReportClient(id);
     }
+    notifyListeners();
   }
 
   fetchIndvidualReportClient(String clientID) async {
@@ -318,6 +321,7 @@ class InstitutionProvider with ChangeNotifier {
           userID: clientID,
         ));
       });
+      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
       throw (e);

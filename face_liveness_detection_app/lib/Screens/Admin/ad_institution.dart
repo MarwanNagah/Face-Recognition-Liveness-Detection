@@ -51,12 +51,7 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
                   )
                 : isTest
                     ? RefreshIndicator(
-                        onRefresh: () =>
-                            refresh(context).then((value) => setState(() {
-                                  Provider.of<InstitutionProvider>(context,
-                                          listen: false)
-                                      .fetchusers();
-                                })),
+                        onRefresh: () => refresh(context),
                         child: Padding(
                           padding: EdgeInsets.all(8),
                           child: Consumer<InstitutionProvider>(
