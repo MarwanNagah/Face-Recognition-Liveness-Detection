@@ -18,6 +18,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     super.initState();
     _controller = CalendarController();
+    refresh(context);
   }
 
   Future<void> refresh(BuildContext context) async {

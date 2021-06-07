@@ -9,6 +9,10 @@ class Reports extends StatefulWidget {
 }
 
 class _ReportsState extends State<Reports> {
+  void initState() {
+    super.initState();
+  }
+
   Future<void> refresh(BuildContext context) async {
     await Provider.of<InstitutionProvider>(context, listen: false)
         .fetchReports();

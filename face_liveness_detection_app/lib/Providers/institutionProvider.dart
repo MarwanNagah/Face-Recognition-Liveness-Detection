@@ -246,6 +246,9 @@ class InstitutionProvider with ChangeNotifier {
   }
 
   Future<void> fetchInstitutionNotifications() async {
+    if (_institution == null) {
+      await this.fetchInstitution();
+    }
     var id = _institution.id;
     var url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$id/notifications.json';
@@ -274,39 +277,33 @@ class InstitutionProvider with ChangeNotifier {
     }
   }
 
-  void fetchReports() async {
-    if (_institution.employees.isEmpty) {
+  Future<void> fetchReports() async {
+    if (_institution == null) {
       await this.fetchInstitution();
+    }
+    if (_institution.employees.isEmpty) {
       await this.fetchEmployeesNo(_institution.id);
       await this.fetchusers();
     }
     print('test11111 ${_institution.employees.length}');
     var clientsSize = _institution.employees.length;
 
-    List<Report> temp = [];
-
     institutionReports = [];
 
     for (int i = 0; i < clientsSize; i++) {
-      print(i + 5000);
       var id = _institution.employees[i].uid;
 
       await fetchIndvidualReportClient(id);
     }
-
-    print(institutionReports.length);
   }
 
   fetchIndvidualReportClient(String clientID) async {
-    print(clientID);
     var url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users/$clientID/Report.json';
     try {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
       final dbData = json.decode(response.body) as Map<String, dynamic>;
-
-      print(dbData);
 
       if (dbData == null) {
         return;
