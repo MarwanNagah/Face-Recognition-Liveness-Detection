@@ -93,6 +93,25 @@ class User {
     }
   }
 
+  readUserByID(String id) async {
+    print('this is user being read');
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/users/$id.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      readType(dbData['usertype']);
+      this.eMail = dbData['eMail'];
+      this.firstName = dbData['firstname'];
+      this.lastName = dbData['lastName'];
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<UserType> readType(int id) async {
     final UserTypes temp = UserTypes();
     UserType type = await temp.findById(id);

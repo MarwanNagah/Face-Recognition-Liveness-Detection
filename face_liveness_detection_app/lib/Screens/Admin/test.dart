@@ -38,14 +38,17 @@ class _ReportsState extends State<Reports> {
                                 itemBuilder: (_, i) => Column(
                                   children: [
                                     ReportWidget(
-                                        reportID: institution
-                                            .institutionReports[i].reportID,
-                                        date: institution
-                                            .institutionReports[i].reportDate,
-                                        status: institution
-                                            .institutionReports[i].status,
-                                        userID: institution
-                                            .institutionReports[i].userID)
+                                      reportID: institution
+                                          .institutionReports[i].reportID,
+                                      date: institution
+                                          .institutionReports[i].reportDate,
+                                      status: institution
+                                          .institutionReports[i].status,
+                                      userID: institution
+                                          .institutionReports[i].userID,
+                                      img: institution
+                                          .institutionReports[i].takenImage,
+                                    )
                                   ],
                                 ),
                               )),

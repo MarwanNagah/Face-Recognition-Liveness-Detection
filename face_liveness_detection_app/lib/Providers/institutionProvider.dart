@@ -22,6 +22,10 @@ class InstitutionProvider with ChangeNotifier {
 
   List<Report> institutionReports = [];
 
+  cc.Client findClientById(String id) {
+    return _institution.employees.firstWhere((client) => client.uid == id);
+  }
+
   Institution findById(String id) {
     return _institution;
   }
@@ -317,7 +321,6 @@ class InstitutionProvider with ChangeNotifier {
           userID: clientID,
         ));
       });
-      print('dhashdgasd ${institutionReports.length}');
     } on Exception catch (e) {
       print(e.toString());
       throw (e);
