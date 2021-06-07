@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'ad_institution.dart';
 import 'adminhomepage.dart';
 import 'employees.dart';
-import 'test.dart';
+import 'admin_report.dart';
 
 class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
