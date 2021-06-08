@@ -11,10 +11,10 @@ class EmployeeController {
   Notification empNotification;
   Report empReport;
 
-  Future detectFaces(
+  /*Future detectFaces(
       File pickedImage, List<Rect> rect, String url, String userID) {
     employee.detectFaces(pickedImage, rect, url, userID);
-  }
+  }*/
 
   addImage() async {
     scannedImage.addImage();

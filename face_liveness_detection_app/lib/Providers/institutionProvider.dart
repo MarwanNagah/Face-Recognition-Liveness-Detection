@@ -319,7 +319,6 @@ class InstitutionProvider with ChangeNotifier {
       await Future.delayed(Duration(seconds: 1));
     }
 
-    print('test11111 ${_institution.employees.length}');
     var clientsSize = _institution.employees.length;
 
     institutionReports = [];
@@ -338,12 +337,10 @@ class InstitutionProvider with ChangeNotifier {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
       final dbData = json.decode(response.body) as Map<String, dynamic>;
-      print('111');
       print(dbData);
       if (dbData == null) {
         return;
       }
-      print('112');
 
       dbData.forEach((key, data) {
         institutionReports.add(new Report(
