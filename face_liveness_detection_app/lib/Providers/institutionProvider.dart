@@ -7,6 +7,7 @@ import 'package:face_liveness_detection_app/Screens/Admin/employees.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:face_liveness_detection_app/Models/institution.dart';
 import 'package:face_liveness_detection_app/Models/notification.dart' as noti;
 import 'package:face_liveness_detection_app/Models/image.dart' as img;
@@ -21,6 +22,8 @@ class InstitutionProvider with ChangeNotifier {
   List<noti.Notification> _institutionNotifications = [];
 
   List<Report> institutionReports = [];
+
+  List<Report> ReportsByDate = [];
 
   cc.Client findClientById(String id) {
     return _institution.employees.firstWhere((client) => client.uid == id);
@@ -338,12 +341,9 @@ class InstitutionProvider with ChangeNotifier {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri);
       final dbData = json.decode(response.body) as Map<String, dynamic>;
-      print('111');
-      print(dbData);
       if (dbData == null) {
         return;
       }
-      print('112');
 
       dbData.forEach((key, data) {
         institutionReports.add(new Report(
@@ -354,6 +354,26 @@ class InstitutionProvider with ChangeNotifier {
           userID: clientID,
         ));
       });
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
+  }
+
+  Future<void> fetchReportByDate(DateTime date) async {
+    try {
+      this.ReportsByDate = [];
+      String datenow = DateFormat("yyyy-MM-dd").format(date);
+      print("Selected date :${datenow}");
+      for (int i = 0; i < institutionReports.length; i++) {
+        String compareday =
+            DateFormat("yyyy-MM-dd").format(institutionReports[i].reportDate);
+        if (datenow == compareday) {
+          print("Match : $i");
+          ReportsByDate.add(institutionReports[i]);
+        }
+      }
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
