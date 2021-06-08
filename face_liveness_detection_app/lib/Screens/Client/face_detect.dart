@@ -1,18 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
 import 'package:face_liveness_detection_app/Models/client.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:face_liveness_detection_app/result.dart';
-import 'package:path/path.dart' as Path;
-import 'package:face_liveness_detection_app/Models/user.dart';
 import 'package:face_liveness_detection_app/Providers/auth.dart';
 
 class FaceDetect extends StatefulWidget {
+  static String finalResult = "Loading...";
   final Client loggedUser;
 
   FaceDetect({@required this.loggedUser});
@@ -32,10 +25,22 @@ class _FaceDetectState extends State<FaceDetect> {
   String imageURL;
   String imagePath;
   String tokenValue;
-  String finalResult = "Loading...";
+
   final AuthService _auth = AuthService();
 
   final Client loggedUser;
+
+  changeIsResultHere() {
+    setState(() {
+      isResultHere = !isResultHere;
+    });
+  }
+
+  changeIsFaceDetected() {
+    setState(() {
+      isFaceDetected = !isFaceDetected;
+    });
+  }
 
   _FaceDetectState({@required this.loggedUser});
 
@@ -119,14 +124,14 @@ class _FaceDetectState extends State<FaceDetect> {
     Widget okButton = FlatButton(
       child: Text("OK"),
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context, rootNavigator: true).pop();
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Result"),
-      content: Text(finalResult),
+      content: Text(FaceDetect.finalResult),
       actions: [
         okButton,
       ],
@@ -143,8 +148,6 @@ class _FaceDetectState extends State<FaceDetect> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff30384c),
@@ -196,9 +199,12 @@ class _FaceDetectState extends State<FaceDetect> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff30384c),
         onPressed: () {
-          //loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
+          loggedUser
+              .detectFaces(pickedImage, rect, url, loggedUser.fireID,
+                  this.changeIsResultHere, this.changeIsFaceDetected)
+              .then((value) => showAlertDialog(context));
           //detectFaces().then((value) => showAlertDialog(context));
-          _auth.signOut();
+          //_auth.signOut();
         },
         child: Icon(Icons.check),
       ),

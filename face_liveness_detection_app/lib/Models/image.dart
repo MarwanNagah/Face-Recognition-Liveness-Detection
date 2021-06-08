@@ -12,6 +12,10 @@ class Image {
     this._height = height;
     this._width = width;
     this._path = path;
+
+    if (imageID != "") {
+      this.readImage();
+    }
   }
 
   set imageID(String imageID) {
@@ -34,6 +38,10 @@ class Image {
     return this._imageID;
   }
 
+  get height {
+    return this._height;
+  }
+
   addImage() async {
     final url =
         'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/images.json';
@@ -50,5 +58,26 @@ class Image {
     });
     this._imageID = json.decode(response.body)['name'];
     print(this._imageID);
+  }
+
+  readImage() async {
+    String id = this._imageID;
+    var url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/images/$id.json';
+    try {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri);
+      final dbData = json.decode(response.body) as Map<String, dynamic>;
+
+      if (dbData == null) {
+        return;
+      }
+      this._height = dbData['height'];
+      this._width = dbData['width'];
+      this._path = dbData['path'];
+    } on Exception catch (e) {
+      print(e.toString());
+      throw (e);
+    }
   }
 }

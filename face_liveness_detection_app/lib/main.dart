@@ -86,22 +86,24 @@ class _PageNavigatorState extends State<PageNavigator> {
 
   void asyncMethod() async {
     await loggedUser.readUser();
-    Future.delayed(const Duration(seconds: 1), () async {
-      if (loggedUser.userType.userTypeName == "Client") {
-        //page for client
-        await loggedUser.readInstitution();
-        Client loggedClient = Client(loggedUser);
-        initialPage = FaceDetect(loggedUser: loggedClient);
-      } else if (loggedUser.userType.userTypeName == "Manager") {
-        //page for manager
-        initialPage = Adminpage(user: loggedUser);
-      } else {
-        //page for admin
-        initialPage = Loading();
-      }
-      setState(() {
-        _isLoaded = true;
-      });
+
+    if (loggedUser.userType == null) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+    if (loggedUser.userType.userTypeName == "Client") {
+      //page for client
+      await loggedUser.readInstitution();
+      Client loggedClient = Client(loggedUser);
+      initialPage = FaceDetect(loggedUser: loggedClient);
+    } else if (loggedUser.userType.userTypeName == "Manager") {
+      //page for manager
+      initialPage = Adminpage(user: loggedUser);
+    } else {
+      //page for admin
+      initialPage = Loading();
+    }
+    setState(() {
+      _isLoaded = true;
     });
   }
 

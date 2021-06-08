@@ -4,6 +4,7 @@ import 'package:face_liveness_detection_app/Models/image.dart';
 import 'package:face_liveness_detection_app/Models/notification.dart';
 import 'package:face_liveness_detection_app/Models/report.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
+import 'package:face_liveness_detection_app/main.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,9 +12,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
+import 'package:face_liveness_detection_app/Screens/Client/face_detect.dart';
 
 class Client extends User {
   Report clientReport;
+
+  List<Report> clientReports = [];
 
   Client(User user)
       : super.constructUser(fUser: user.fUser, uid: user.uid, user: user);
@@ -44,26 +48,26 @@ class Client extends User {
     return url;
   }
 
-  Future getResult(String url) async {
+  Future getResult(String url, Function resultChange) async {
     var data = await getData(url);
     var decodedData = jsonDecode(data);
 
-    String finalResult = "";
-
     if (decodedData['result'] == "0") {
-      finalResult = "Live";
+      FaceDetect.finalResult = "Live";
       clientReport.status = true;
     } else {
-      finalResult = "Spoof";
+      FaceDetect.finalResult = "Spoof";
       clientReport.status = false;
     }
+
+    resultChange();
 
     await clientReport.addReport();
     return clientReport.status;
   }
 
-  Future detectFaces(
-      File pickedImage, List<Rect> rect, String url, String userID) async {
+  Future detectFaces(File pickedImage, List<Rect> rect, String url,
+      String userID, Function resultChange, Function faceDetectedChange) async {
     clientReport = Report(userID: userID);
     FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
     FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
@@ -77,8 +81,10 @@ class Client extends User {
       rect.add(face.boundingBox);
     }
 
+    faceDetectedChange();
+
     String newURL = await uploadFile(pickedImage, url);
-    bool result = await getResult(newURL);
+    bool result = await getResult(newURL, resultChange);
 
     if (result == false) {
       Notification newNotification =

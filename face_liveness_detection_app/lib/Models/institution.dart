@@ -1,3 +1,4 @@
+import 'package:face_liveness_detection_app/Models/client.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
 
 class Institution {
@@ -6,7 +7,7 @@ class Institution {
   String appusage;
   bool isActive;
 
-  List<User> employees;
+  List<Client> employees;
 
   Institution(
       {this.id,

@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'ad_institution.dart';
 import 'adminhomepage.dart';
 import 'employees.dart';
-import 'test.dart';
+import 'admin_report.dart';
 
-class TabNavigator extends StatelessWidget {
-  TabNavigator({this.navigatorKey, this.tabItem});
+class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final String tabItem;
+  TabNavigator({this.navigatorKey, this.tabItem});
+
+  @override
+  _TabNavigatorState createState() =>
+      _TabNavigatorState(this.navigatorKey, this.tabItem);
+}
+
+class _TabNavigatorState extends State<TabNavigator> {
+  final GlobalKey<NavigatorState> navigatorKey;
+  final String tabItem;
+
+  _TabNavigatorState(this.navigatorKey, this.tabItem);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +28,7 @@ class TabNavigator extends StatelessWidget {
     else if (tabItem == "Page2")
       child = AdminInstitutionSc();
     else if (tabItem == "Page3")
-      child = TestNav();
+      child = Reports();
     else if (tabItem == "Page4") child = EmployeesSc();
 
     return Navigator(

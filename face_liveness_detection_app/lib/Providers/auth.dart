@@ -52,9 +52,16 @@ class AuthService {
     String password,
     String firstName,
     String lastName,
+    String institutionID = "",
     int userType,
   }) async {
-    UserType newType = UserType(userTypeID: userType, userTypeName: 'Manager');
+    UserType newType;
+    if (userType == 0) {
+      newType = UserType(userTypeID: userType, userTypeName: 'Client');
+    } else if (userType == 1) {
+      newType = UserType(userTypeID: userType, userTypeName: 'Manager');
+    }
+
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -67,6 +74,7 @@ class AuthService {
         firstName: firstName,
         lastName: lastName,
         userType: newType,
+        institutionID: institutionID,
       );
       signedinUser.register();
       return _userFromFirebaseUser(user);
