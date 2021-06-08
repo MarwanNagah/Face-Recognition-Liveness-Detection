@@ -24,28 +24,33 @@ class _NotficationWidgetState extends State<NotficationWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-        //padding: const EdgeInsets.only(right: 12.0),
-        child: Column(
-          children: [
-            Text(
-              '${date.toString()}',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-            Text(
-              '$status',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0),
-            ),
-          ],
-        ),
+      color: Colors.blueGrey[100],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Mohamed Gamal'),
+            subtitle: Text(
+                'is trying to use the application but the result is spoof\nDate: ${date.day}/${date.month}/${date.year} time :${date.hour}:${date.minute} '),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.remove_red_eye),
+                
+                tooltip: 'mark as seen',
+                
+                onPressed: () {
+                  setState(() {});
+                },
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ],
       ),
     );
   }

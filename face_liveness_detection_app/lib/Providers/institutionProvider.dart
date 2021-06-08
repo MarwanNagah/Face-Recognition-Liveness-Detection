@@ -322,7 +322,6 @@ class InstitutionProvider with ChangeNotifier {
       await Future.delayed(Duration(seconds: 1));
     }
 
-    print('test11111 ${_institution.employees.length}');
     var clientsSize = _institution.employees.length;
 
     institutionReports = [];

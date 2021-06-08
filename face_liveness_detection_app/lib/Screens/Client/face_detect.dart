@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:face_liveness_detection_app/Providers/auth.dart';
 
 class FaceDetect extends StatefulWidget {
+  static String finalResult = "Loading...";
   final Client loggedUser;
 
   FaceDetect({@required this.loggedUser});
@@ -24,10 +25,22 @@ class _FaceDetectState extends State<FaceDetect> {
   String imageURL;
   String imagePath;
   String tokenValue;
-  String finalResult = "Loading...";
+
   final AuthService _auth = AuthService();
 
   final Client loggedUser;
+
+  changeIsResultHere() {
+    setState(() {
+      isResultHere = !isResultHere;
+    });
+  }
+
+  changeIsFaceDetected() {
+    setState(() {
+      isFaceDetected = !isFaceDetected;
+    });
+  }
 
   _FaceDetectState({@required this.loggedUser});
 
@@ -111,14 +124,14 @@ class _FaceDetectState extends State<FaceDetect> {
     Widget okButton = FlatButton(
       child: Text("OK"),
       onPressed: () {
-        Navigator.of(context).pop();
+        Navigator.of(context, rootNavigator: true).pop();
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Result"),
-      content: Text(finalResult),
+      content: Text(FaceDetect.finalResult),
       actions: [
         okButton,
       ],
@@ -137,13 +150,16 @@ class _FaceDetectState extends State<FaceDetect> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff30384c),
         title: Text("Face Detection"),
         actions: [
+          
           FloatingActionButton(
+            backgroundColor: Color(0xff30384c),
             onPressed: getImage,
             child: Icon(
-              Icons.add_a_photo,
-              color: Colors.black,
+              Icons.upload_file,
+              color: Colors.white,
             ),
           )
         ],
@@ -181,10 +197,14 @@ class _FaceDetectState extends State<FaceDetect> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff30384c),
         onPressed: () {
-          //loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
+          loggedUser
+              .detectFaces(pickedImage, rect, url, loggedUser.fireID,
+                  this.changeIsResultHere, this.changeIsFaceDetected)
+              .then((value) => showAlertDialog(context));
           //detectFaces().then((value) => showAlertDialog(context));
-          _auth.signOut();
+          //_auth.signOut();
         },
         child: Icon(Icons.check),
       ),

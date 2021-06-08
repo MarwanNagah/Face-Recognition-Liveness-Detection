@@ -1,12 +1,9 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:face_liveness_detection_app/Models/userType.dart';
 import 'package:face_liveness_detection_app/Providers/user_types.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:face_liveness_detection_app/Models/client.dart' as cc;
-import 'package:provider/provider.dart';
 
 class User {
   final String uid;
