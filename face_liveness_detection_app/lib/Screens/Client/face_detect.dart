@@ -147,13 +147,16 @@ class _FaceDetectState extends State<FaceDetect> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff30384c),
         title: Text("Face Detection"),
         actions: [
+          
           FloatingActionButton(
+            backgroundColor: Color(0xff30384c),
             onPressed: getImage,
             child: Icon(
-              Icons.add_a_photo,
-              color: Colors.black,
+              Icons.upload_file,
+              color: Colors.white,
             ),
           )
         ],
@@ -191,6 +194,7 @@ class _FaceDetectState extends State<FaceDetect> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff30384c),
         onPressed: () {
           //loggedUser.detectFaces(pickedImage, rect, url, loggedUser.fireID);
           //detectFaces().then((value) => showAlertDialog(context));
