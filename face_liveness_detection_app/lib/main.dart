@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'package:face_liveness_detection_app/Models/client.dart';
-import 'package:face_liveness_detection_app/Screens/Admin/admin.dart';
-import 'package:face_liveness_detection_app/Providers/user_types.dart';
-import 'package:face_liveness_detection_app/Screens/loading.dart';
+import 'package:face_liveness_detection_app/Views/Admin/admin.dart';
+import 'package:face_liveness_detection_app/Controllers/user_types.dart';
+import 'package:face_liveness_detection_app/Views/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:face_liveness_detection_app/Screens/wrapper.dart';
+import 'package:face_liveness_detection_app/Views/wrapper.dart';
 import 'Models/user.dart';
-import 'Providers/auth.dart';
-import 'Providers/institutionProvider.dart';
-import 'Screens/Admin/manage_employees.dart';
-import 'Screens/Admin/manage_institution.dart';
-import 'package:face_liveness_detection_app/Screens/Client/face_detect.dart';
+import 'Controllers/auth.dart';
+import 'Controllers/institutionProvider.dart';
+import 'Views/Admin/manage_employees.dart';
+import 'Views/Admin/manage_institution.dart';
+import 'package:face_liveness_detection_app/Views/Client/face_detect.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,7 +88,7 @@ class _PageNavigatorState extends State<PageNavigator> {
     await loggedUser.readUser();
 
     if (loggedUser.userType == null) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 2));
     }
     if (loggedUser.userType.userTypeName == "Client") {
       //page for client

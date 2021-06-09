@@ -1,5 +1,5 @@
 import 'package:face_liveness_detection_app/Models/user.dart';
-import 'package:face_liveness_detection_app/Providers/auth.dart';
+import 'package:face_liveness_detection_app/Controllers/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'admin_appbar.dart';
@@ -87,14 +87,15 @@ class _AdminpageState extends State<Adminpage> {
           selectedItemColor: Colors.greenAccent[400],
           items: [
             BottomNavigationBarItem(
+                icon: Icon(Icons.location_city),
+                title: Text("Institution"),
+                backgroundColor: Color(0xff30384c)),
+            BottomNavigationBarItem(
               icon: Icon(Icons.notifications_active),
               title: Text("Notification"),
               backgroundColor: Color(0xff30384c),
             ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.location_city),
-                title: Text("Institution"),
-                backgroundColor: Color(0xff30384c)),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.recent_actors_sharp),
               title: Text("Report"),

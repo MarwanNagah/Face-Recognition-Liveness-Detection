@@ -1,5 +1,5 @@
-import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
-import 'package:face_liveness_detection_app/Screens/Admin/manage_employees.dart';
+import 'package:face_liveness_detection_app/Controllers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Views/Admin/manage_employees.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -85,44 +85,37 @@ class _InstitutionEmployeesState extends State<InstitutionEmployees> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              TextButton(
-                child: const Text('DELETE'),
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.red,
-                ),
-                onPressed: () {/* ... */},
-              ),
+              // TextButton(
+              //   child: const Text('DELETE'),
+              //   style: TextButton.styleFrom(
+              //     primary: Colors.white,
+              //     backgroundColor: Colors.red,
+              //   ),
+              //   onPressed: () {/* ... */},
+              // ),
               const SizedBox(width: 8),
-              TextButton(
-                child: const Text('Edit'),
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.greenAccent[400],
-                ),
-                onPressed: () {
-                  Provider.of<InstitutionProvider>(context, listen: false)
-                      .readUserbyID(id)
-                      .then((value) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ManageEmployees(),
-                          settings: RouteSettings(
-                            arguments: id,
-                          )),
-                    ).then((value) => setState(() {}));
-                  });
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => ManageEmployees(),
-                  //       settings: RouteSettings(
-                  //         arguments: id,
-                  //       )),
-                  // ).then((value) => setState(() {}));
-                },
-              ),
+              // TextButton(
+              //   child: const Text('Edit'),
+              //   style: TextButton.styleFrom(
+              //     primary: Colors.white,
+              //     backgroundColor: Colors.greenAccent[400],
+              //   ),
+              //   onPressed: () {
+              //     Provider.of<InstitutionProvider>(context, listen: false)
+              //         .readUserbyID(id)
+              //         .then((value) {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => ManageEmployees(),
+              //             settings: RouteSettings(
+              //               arguments: id,
+              //             )),
+              //       ).then((value) => setState(() {}));
+              //     });
+
+              //   },
+              // ),
               const SizedBox(width: 8),
             ],
           ),

@@ -1,5 +1,5 @@
-import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
-import 'package:face_liveness_detection_app/Screens/Widgets/report_widget.dart';
+import 'package:face_liveness_detection_app/Controllers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Views/Widgets/report_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

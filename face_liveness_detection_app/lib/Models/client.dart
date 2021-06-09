@@ -12,7 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:face_liveness_detection_app/result.dart';
 import 'package:path/path.dart' as Path;
-import 'package:face_liveness_detection_app/Screens/Client/face_detect.dart';
+import 'package:face_liveness_detection_app/Views/Client/face_detect.dart';
 
 class Client extends User {
   Report clientReport;

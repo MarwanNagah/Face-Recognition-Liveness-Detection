@@ -38,6 +38,10 @@ class Image {
     return this._imageID;
   }
 
+  get imagePath {
+    return this._path;
+  }
+
   get height {
     return this._height;
   }

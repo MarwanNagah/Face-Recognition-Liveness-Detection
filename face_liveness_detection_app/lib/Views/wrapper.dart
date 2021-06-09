@@ -1,7 +1,7 @@
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:face_liveness_detection_app/main.dart';
-import 'package:face_liveness_detection_app/Screens/authenticate/authenticate.dart';
+import 'package:face_liveness_detection_app/Views/authenticate/authenticate.dart';
 import 'package:provider/provider.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
 

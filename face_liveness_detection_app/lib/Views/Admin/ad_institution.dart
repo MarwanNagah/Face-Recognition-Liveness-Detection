@@ -1,6 +1,6 @@
 import 'package:face_liveness_detection_app/Models/institution.dart';
-import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
-import 'package:face_liveness_detection_app/Screens/Widgets/institution_widget.dart';
+import 'package:face_liveness_detection_app/Controllers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Views/Widgets/institution_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +51,8 @@ class _AdminInstitutionScState extends State<AdminInstitutionSc> {
                   )
                 : isTest
                     ? RefreshIndicator(
-                        onRefresh: () => refresh(context),
+                        onRefresh: () =>
+                            refresh(context).then((value) => setState(() {})),
                         child: Padding(
                           padding: EdgeInsets.all(8),
                           child: Consumer<InstitutionProvider>(

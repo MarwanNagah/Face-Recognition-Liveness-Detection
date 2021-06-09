@@ -1,6 +1,6 @@
-import 'package:face_liveness_detection_app/Screens/loading.dart';
+import 'package:face_liveness_detection_app/Views/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:face_liveness_detection_app/Providers/auth.dart';
+import 'package:face_liveness_detection_app/Controllers/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;

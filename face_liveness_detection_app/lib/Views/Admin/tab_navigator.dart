@@ -24,9 +24,9 @@ class _TabNavigatorState extends State<TabNavigator> {
   Widget build(BuildContext context) {
     Widget child;
     if (tabItem == "Page1")
-      child = AdminHomePage();
-    else if (tabItem == "Page2")
       child = AdminInstitutionSc();
+    else if (tabItem == "Page2")
+      child = AdminHomePage();
     else if (tabItem == "Page3")
       child = Reports();
     else if (tabItem == "Page4") child = EmployeesSc();

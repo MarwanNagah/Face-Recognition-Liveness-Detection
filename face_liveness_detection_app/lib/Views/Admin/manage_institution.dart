@@ -1,5 +1,5 @@
 import 'package:face_liveness_detection_app/Models/institution.dart';
-import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Controllers/institutionProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -122,17 +122,17 @@ class _ManageInstitutionState extends State<ManageInstitution> {
     super.didChangeDependencies();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    nameFocusNode = FocusNode();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   nameFocusNode = FocusNode();
+  // }
 
-  @override
-  void dispose() {
-    nameFocusNode.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   nameFocusNode.dispose();
+  //   super.dispose();
+  // }
 
   Future<void> formSetup() async {
     final isValid = _formKey.currentState.validate();
@@ -238,12 +238,12 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                     ),
                     TextFormField(
                       initialValue: intialValues['institutionName'],
-                      focusNode: nameFocusNode,
-                      onTap: () {
-                        setState(() {
-                          FocusScope.of(context).requestFocus(nameFocusNode);
-                        });
-                      },
+                      //focusNode: nameFocusNode,
+                      // onTap: () {
+                      //   setState(() {
+                      //     FocusScope.of(context).requestFocus(nameFocusNode);
+                      //   });
+                      // },
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25),
@@ -268,9 +268,6 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                                   ? FontWeight.w500
                                   : FontWeight.w300)),
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).unfocus();
-                      },
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Please enter Institution Name';
@@ -392,7 +389,7 @@ class _ManageInstitutionState extends State<ManageInstitution> {
                       padding: const EdgeInsets.only(top: 20.0),
                     ),
                     new Text(
-                      'Is Active :',
+                      'Active :',
                       style: TextStyle(
                           color: Color(0xff30384c),
                           fontWeight: FontWeight.w500,

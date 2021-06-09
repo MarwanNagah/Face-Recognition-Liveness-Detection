@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:face_liveness_detection_app/Models/userType.dart';
-import 'package:face_liveness_detection_app/Providers/user_types.dart';
+import 'package:face_liveness_detection_app/Controllers/user_types.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

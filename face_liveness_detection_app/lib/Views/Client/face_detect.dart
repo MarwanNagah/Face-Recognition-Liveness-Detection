@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:face_liveness_detection_app/Models/client.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:face_liveness_detection_app/Providers/auth.dart';
+import 'package:face_liveness_detection_app/Controllers/auth.dart';
 
 class FaceDetect extends StatefulWidget {
   static String finalResult = "Loading...";
@@ -21,7 +21,7 @@ class _FaceDetectState extends State<FaceDetect> {
   bool isFaceDetected = false;
   bool isResultHere = false;
   List<Rect> rect = [];
-  String url = 'http://10.0.2.2:5000/api?';
+  String url = 'http://192.168.1.15:5000/api?';
   String imageURL;
   String imagePath;
   String tokenValue;
@@ -83,9 +83,9 @@ class _FaceDetectState extends State<FaceDetect> {
       isImageLoaded = false;
       isFaceDetected = false;
       isResultHere = false;
-      url = 'http://10.0.2.2:5000/api?';
+      url = 'http://192.168.1.15:5000/api?';
     });
-    var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
+    var tempStore = await ImagePicker().getImage(source: ImageSource.camera);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
     print(imageFile.toString());
@@ -153,7 +153,6 @@ class _FaceDetectState extends State<FaceDetect> {
         backgroundColor: Color(0xff30384c),
         title: Text("Face Detection"),
         actions: [
-          
           FloatingActionButton(
             backgroundColor: Color(0xff30384c),
             onPressed: getImage,

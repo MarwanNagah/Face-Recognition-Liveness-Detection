@@ -1,7 +1,7 @@
 import 'package:face_liveness_detection_app/Models/institution.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
-import 'package:face_liveness_detection_app/Providers/auth.dart';
-import 'package:face_liveness_detection_app/Providers/institutionProvider.dart';
+import 'package:face_liveness_detection_app/Controllers/auth.dart';
+import 'package:face_liveness_detection_app/Controllers/institutionProvider.dart';
 import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

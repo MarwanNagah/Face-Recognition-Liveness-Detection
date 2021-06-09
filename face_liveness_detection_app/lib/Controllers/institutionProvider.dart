@@ -2,8 +2,8 @@ import 'package:face_liveness_detection_app/Models/HTTPException.dart';
 import 'package:face_liveness_detection_app/Models/client.dart' as cc;
 import 'package:face_liveness_detection_app/Models/report.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
-import 'package:face_liveness_detection_app/Screens/Admin/ad_institution.dart';
-import 'package:face_liveness_detection_app/Screens/Admin/employees.dart';
+import 'package:face_liveness_detection_app/Views/Admin/ad_institution.dart';
+import 'package:face_liveness_detection_app/Views/Admin/employees.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -364,12 +364,12 @@ class InstitutionProvider with ChangeNotifier {
     try {
       this.ReportsByDate = [];
       String datenow = DateFormat("yyyy-MM-dd").format(date);
-      print("Selected date :${datenow}");
+      //print("Selected date :${datenow}");
       for (int i = 0; i < institutionReports.length; i++) {
         String compareday =
             DateFormat("yyyy-MM-dd").format(institutionReports[i].reportDate);
         if (datenow == compareday) {
-          print("Match : $i");
+          // print("Match : $i");
           ReportsByDate.add(institutionReports[i]);
         }
       }

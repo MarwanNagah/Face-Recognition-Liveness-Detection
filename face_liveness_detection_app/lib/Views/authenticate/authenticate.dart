@@ -1,7 +1,7 @@
-import 'package:face_liveness_detection_app/Screens/authenticate/homepage.dart';
-import 'package:face_liveness_detection_app/Screens/authenticate/register.dart';
+import 'package:face_liveness_detection_app/Views/authenticate/homepage.dart';
+import 'package:face_liveness_detection_app/Views/authenticate/register.dart';
 import 'package:flutter/material.dart';
-import 'package:face_liveness_detection_app/Screens/authenticate/sign_in.dart';
+import 'package:face_liveness_detection_app/Views/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   @override
