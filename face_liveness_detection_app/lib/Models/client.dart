@@ -4,7 +4,6 @@ import 'package:face_liveness_detection_app/Models/image.dart';
 import 'package:face_liveness_detection_app/Models/notification.dart';
 import 'package:face_liveness_detection_app/Models/report.dart';
 import 'package:face_liveness_detection_app/Models/user.dart';
-import 'package:face_liveness_detection_app/main.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,19 +65,25 @@ class Client extends User {
     return clientReport.status;
   }
 
-  Future detectFaces(File pickedImage, List<Rect> rect, String url,
-      String userID, Function resultChange, Function faceDetectedChange) async {
+  Future detectFaces(File pickedImage, String url, String userID,
+      Function resultChange, Function faceDetectedChange) async {
     clientReport = Report(userID: userID);
     FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
     FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
     List<Face> faces = await faceDetector.processImage(myImage);
 
-    if (rect.length > 0) {
-      rect = [];
+    if (FaceDetect.rect.length > 0) {
+      FaceDetect.rect = [];
+    }
+
+    print(faces.length);
+
+    if (faces.length != 1) {
+      return false;
     }
 
     for (Face face in faces) {
-      rect.add(face.boundingBox);
+      FaceDetect.rect.add(face.boundingBox);
     }
 
     faceDetectedChange();

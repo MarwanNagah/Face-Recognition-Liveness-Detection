@@ -7,6 +7,7 @@ import 'package:face_liveness_detection_app/Controllers/auth.dart';
 class FaceDetect extends StatefulWidget {
   static String finalResult = "Loading...";
   final Client loggedUser;
+  static List<Rect> rect = [];
 
   FaceDetect({@required this.loggedUser});
 
@@ -20,7 +21,6 @@ class _FaceDetectState extends State<FaceDetect> {
   bool isImageLoaded = false;
   bool isFaceDetected = false;
   bool isResultHere = false;
-  List<Rect> rect = [];
   String url = 'http://192.168.1.15:5000/api?';
   String imageURL;
   String imagePath;
@@ -44,48 +44,14 @@ class _FaceDetectState extends State<FaceDetect> {
 
   _FaceDetectState({@required this.loggedUser});
 
-  // Future uploadFile() async {
-  //   await Firebase.initializeApp();
-  //   FirebaseStorage storageReference = FirebaseStorage.instance;
-  //   Reference ref = storageReference
-  //       .ref()
-  //       .child('/Face_Images/${Path.basename(pickedImage.path)}}');
-  //   UploadTask uploadTask = ref.putFile(pickedImage);
-  //   await uploadTask.then((res) async {
-  //     imageURL = await res.ref.getDownloadURL();
-  //     Uri uri = Uri.parse(imageURL);
-  //     tokenValue = uri.queryParameters['token'];
-  //     imagePath =
-  //         uri.pathSegments[4].substring(12, uri.pathSegments[4].length - 1);
-  //     url += 'path=' + imagePath + '&token=' + tokenValue;
-  //     print('File Uploaded');
-  //   });
-  // }
-
-  // Future getResult() async {
-  //   var data = await getData(url);
-  //   var decodedData = jsonDecode(data);
-
-  //   if (decodedData['result'] == "0") {
-  //     finalResult = "Live";
-  //   } else {
-  //     finalResult = "Spoof";
-  //   }
-
-  //   setState(() {
-  //     isResultHere = true;
-  //   });
-  //   print(decodedData['result']);
-  // }
-
   getImage() async {
     setState(() {
       isImageLoaded = false;
       isFaceDetected = false;
       isResultHere = false;
-      url = 'http://192.168.1.15:5000/api?';
+      url = 'http://192.168.1.5:5000/api?';
     });
-    var tempStore = await ImagePicker().getImage(source: ImageSource.camera);
+    var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
     print(imageFile.toString());
@@ -98,26 +64,6 @@ class _FaceDetectState extends State<FaceDetect> {
       imageFile = imageFile;
     });
   }
-
-  // Future detectFaces() async {
-  //   FirebaseVisionImage myImage = FirebaseVisionImage.fromFile(pickedImage);
-  //   FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
-  //   List<Face> faces = await faceDetector.processImage(myImage);
-
-  //   if (rect.length > 0) {
-  //     rect = [];
-  //   }
-
-  //   for (Face face in faces) {
-  //     rect.add(face.boundingBox);
-  //   }
-
-  //   setState(() {
-  //     isFaceDetected = true;
-  //   });
-  //   await uploadFile();
-  //   await getResult();
-  // }
 
   showAlertDialog(BuildContext context) {
     // set up the button
@@ -185,8 +131,8 @@ class _FaceDetectState extends State<FaceDetect> {
                             width: imageFile.width.toDouble(),
                             height: imageFile.height.toDouble(),
                             child: CustomPaint(
-                              painter:
-                                  FacePainter(rect: rect, imageFile: imageFile),
+                              painter: FacePainter(
+                                  rect: FaceDetect.rect, imageFile: imageFile),
                             ),
                           ),
                         ),
@@ -197,11 +143,20 @@ class _FaceDetectState extends State<FaceDetect> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xff30384c),
-        onPressed: () {
-          loggedUser
-              .detectFaces(pickedImage, rect, url, loggedUser.fireID,
-                  this.changeIsResultHere, this.changeIsFaceDetected)
-              .then((value) => showAlertDialog(context));
+        onPressed: () async {
+          var result = await loggedUser.detectFaces(
+              pickedImage,
+              url,
+              loggedUser.fireID,
+              this.changeIsResultHere,
+              this.changeIsFaceDetected);
+          if (result) {
+            showAlertDialog(context);
+          } else {
+            FaceDetect.finalResult =
+                'System Detected an Error\nPlease take another image';
+            showAlertDialog(context);
+          }
           //detectFaces().then((value) => showAlertDialog(context));
           //_auth.signOut();
         },
