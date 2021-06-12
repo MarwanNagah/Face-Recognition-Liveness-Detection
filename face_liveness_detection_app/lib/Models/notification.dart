@@ -45,4 +45,19 @@ class Notification {
       print(error);
     });
   }
+
+  seenNotification(String institutionID, String notiID) {
+    print('this is  $institutionID/////// $notiID ');
+    final url =
+        'https://face-liveness-detection-bca56-default-rtdb.firebaseio.com/institutions/$institutionID/notifications/$notiID.json';
+    Uri uri = Uri.parse(url);
+    return http
+        .patch(uri,
+            body: json.encode({
+              'status': true,
+            }))
+        .catchError((error) {
+      print(error);
+    });
+  }
 }

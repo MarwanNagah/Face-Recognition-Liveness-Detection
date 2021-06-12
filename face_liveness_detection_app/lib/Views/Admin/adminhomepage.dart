@@ -60,15 +60,19 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                       itemBuilder: (_, i) => Column(
                                         children: [
                                           NotficationWidget(
-                                            date: notificationData
-                                                .institutionNotifications[i]
-                                                .date,
-                                            userId: notificationData
-                                                .institutionNotifications[i]
-                                                .userId,
-                                            status: notificationData
-                                                .institutionNotifications[i]
-                                                .status,
+                                            institutionID:
+                                                notificationData.institution.id,
+                                            resNOti: notificationData
+                                                .institutionNotifications[i],
+                                            // date: notificationData
+                                            //     .institutionNotifications[i]
+                                            //     .date,
+                                            // userId: notificationData
+                                            //     .institutionNotifications[i]
+                                            //     .userId,
+                                            // status: notificationData
+                                            //     .institutionNotifications[i]
+                                            //     .status,
                                           )
                                         ],
                                       ),
