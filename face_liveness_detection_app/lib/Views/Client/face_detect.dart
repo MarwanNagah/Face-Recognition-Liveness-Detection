@@ -49,7 +49,7 @@ class _FaceDetectState extends State<FaceDetect> {
       isImageLoaded = false;
       isFaceDetected = false;
       isResultHere = false;
-      url = 'http://192.168.1.5:5000/api?';
+      url = 'http://192.168.1.15:5000/api?';
     });
     var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
     imageFile = await tempStore.readAsBytes();
@@ -95,74 +95,112 @@ class _FaceDetectState extends State<FaceDetect> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff30384c),
-        title: Text("Face Detection"),
-        actions: [
-          FloatingActionButton(
-            backgroundColor: Color(0xff30384c),
-            onPressed: getImage,
-            child: Icon(
-              Icons.upload_file,
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-      body: ListView(
-        children: [
-          SizedBox(height: 50),
-          isImageLoaded && !isFaceDetected
-              ? Center(
-                  child: Container(
-                    height: 250.0,
-                    width: 250.0,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: FileImage(pickedImage), fit: BoxFit.cover)),
-                  ),
-                )
-              : isImageLoaded && isFaceDetected && isResultHere
-                  ? Center(
-                      child: Column(children: [
-                      Container(
-                        child: FittedBox(
-                          child: SizedBox(
-                            width: imageFile.width.toDouble(),
-                            height: imageFile.height.toDouble(),
-                            child: CustomPaint(
-                              painter: FacePainter(
-                                  rect: FaceDetect.rect, imageFile: imageFile),
+        appBar: AppBar(
+          backgroundColor: Color(0xff30384c),
+          title: Text("Face Detection"),
+          actions: [
+            FloatingActionButton(
+              backgroundColor: Color(0xff30384c),
+              onPressed: getImage,
+              child: Icon(
+                Icons.upload_file,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+        body: ListView(
+          children: [
+            SizedBox(height: 50),
+            isImageLoaded && !isFaceDetected
+                ? Center(
+                    child: Container(
+                      height: 250.0,
+                      width: 250.0,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: FileImage(pickedImage),
+                              fit: BoxFit.cover)),
+                    ),
+                  )
+                : isImageLoaded && isFaceDetected && isResultHere
+                    ? Center(
+                        child: Column(children: [
+                        Container(
+                          child: FittedBox(
+                            child: SizedBox(
+                              width: imageFile.width.toDouble(),
+                              height: imageFile.height.toDouble(),
+                              child: CustomPaint(
+                                painter: FacePainter(
+                                    rect: FaceDetect.rect,
+                                    imageFile: imageFile),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ]))
-                  : Container()
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff30384c),
-        onPressed: () async {
-          var result = await loggedUser.detectFaces(
-              pickedImage,
-              url,
-              loggedUser.fireID,
-              this.changeIsResultHere,
-              this.changeIsFaceDetected);
-          if (result) {
-            showAlertDialog(context);
-          } else {
-            FaceDetect.finalResult =
-                'System Detected an Error\nPlease take another image';
-            showAlertDialog(context);
-          }
-          //detectFaces().then((value) => showAlertDialog(context));
-          //_auth.signOut();
-        },
-        child: Icon(Icons.check),
-      ),
-    );
+                      ]))
+                    : Container()
+          ],
+        ),
+        floatingActionButton:
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          FloatingActionButton(
+            backgroundColor: Colors.red,
+            child: Icon(Icons.logout),
+            onPressed: () async {
+              _auth.signOut();
+            },
+            heroTag: null,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            backgroundColor: Color(0xff30384c),
+            child: Icon(Icons.check),
+            onPressed: () async {
+              var result = await loggedUser.detectFaces(
+                  pickedImage,
+                  url,
+                  loggedUser.fireID,
+                  this.changeIsResultHere,
+                  this.changeIsFaceDetected);
+              if (result) {
+                showAlertDialog(context);
+              } else {
+                FaceDetect.finalResult =
+                    'System Detected an Error\nPlease take another image';
+                showAlertDialog(context);
+              }
+              //detectFaces().then((value) => showAlertDialog(context));
+              //_auth.signOut();
+            },
+          )
+        ])
+        // floatingActionButton: FloatingActionButton(
+        //   backgroundColor: Color(0xff30384c),
+        //   onPressed: () async {
+        //     var result = await loggedUser.detectFaces(
+        //         pickedImage,
+        //         url,
+        //         loggedUser.fireID,
+        //         this.changeIsResultHere,
+        //         this.changeIsFaceDetected);
+        //     if (result) {
+        //       showAlertDialog(context);
+
+        //     } else {
+        //       FaceDetect.finalResult =
+        //           'System Detected an Error\nPlease take another image';
+        //       showAlertDialog(context);
+        //     }
+        //     //detectFaces().then((value) => showAlertDialog(context));
+        //     //_auth.signOut();
+        //   },
+        //   child: Icon(Icons.check),
+        // ),
+        );
   }
 }
 
