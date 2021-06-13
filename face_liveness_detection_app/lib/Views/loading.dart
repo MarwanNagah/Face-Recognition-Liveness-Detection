@@ -7,16 +7,21 @@ class Loading extends StatelessWidget {
     return Container(
         color: Colors.white,
         child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            Text(
-              'Please wait...',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.blue[900], fontSize: 16.0),
-            )
-          ],
-        )));
+          //     child: Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     CircularProgressIndicator(),
+          //     Text(
+          //       'Please wait...',
+          //       textAlign: TextAlign.center,
+          //       style: TextStyle(color: Colors.blue[900], fontSize: 16.0),
+          //     )
+          //   ],
+          // )
+          child: Image.asset(
+            'assets/images/loading.gif',
+            fit: BoxFit.fill,
+          ),
+        ));
   }
 }
