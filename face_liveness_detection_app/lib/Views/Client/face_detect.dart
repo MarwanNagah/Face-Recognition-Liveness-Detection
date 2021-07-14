@@ -49,9 +49,9 @@ class _FaceDetectState extends State<FaceDetect> {
       isImageLoaded = false;
       isFaceDetected = false;
       isResultHere = false;
-      url = 'http://192.168.1.15:5000/api?';
+      url = 'http://192.168.1.5:5000/api?';
     });
-    var tempStore = await ImagePicker().getImage(source: ImageSource.gallery);
+    var tempStore = await ImagePicker().getImage(source: ImageSource.camera);
     imageFile = await tempStore.readAsBytes();
     imageFile = await decodeImageFromList(imageFile);
     print(imageFile.toString());
